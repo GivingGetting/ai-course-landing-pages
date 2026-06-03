@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GivingGetting AI 课程落地页风格库</title>
+    <meta
+      name="description"
+      content="GivingGetting AI Agent、Vibe Coding、AI 自动化课程的公开落地页风格库。"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #17201d;
+        --muted: #64706c;
+        --line: #dfe8e3;
+        --paper: #f8fbf8;
+        --green: #1f765f;
+        --coral: #dc7359;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+          "Microsoft YaHei", Arial, sans-serif;
+        background: var(--paper);
+        color: var(--ink);
+        line-height: 1.65;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .hero {
+        padding: 72px 20px 42px;
+        background:
+          linear-gradient(120deg, rgba(31, 118, 95, 0.16), transparent 42%),
+          linear-gradient(180deg, #ffffff, var(--paper));
+      }
+
+      .wrap {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .eyebrow {
+        margin: 0 0 12px;
+        color: var(--green);
+        font-size: 14px;
+        font-weight: 800;
+      }
+
+      h1 {
+        max-width: 840px;
+        margin: 0;
+        font-size: clamp(38px, 7vw, 76px);
+        line-height: 1.05;
+        letter-spacing: 0;
+      }
+
+      .lead {
+        max-width: 720px;
+        margin: 22px 0 0;
+        color: #40524d;
+        font-size: 19px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+        padding: 40px 0 72px;
+      }
+
+      .card {
+        min-height: 320px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 18px 48px rgba(25, 54, 46, 0.08);
+        overflow: hidden;
+      }
+
+      .preview {
+        height: 148px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .practical {
+        background:
+          linear-gradient(90deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.42)),
+          url("gpts-practical/assets/ai-agent-course-hero.png") center/cover;
+      }
+
+      .dark {
+        background:
+          radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.52), transparent 34%),
+          linear-gradient(135deg, #050816, #111b3b 58%, #f5f7fb);
+      }
+
+      .minimal {
+        background:
+          linear-gradient(90deg, #ffffff 0 48%, #edf4f0 48% 100%),
+          repeating-linear-gradient(0deg, transparent 0 18px, rgba(31, 118, 95, 0.18) 19px);
+      }
+
+      .warm {
+        background:
+          radial-gradient(circle at 24% 24%, rgba(220, 115, 89, 0.26), transparent 28%),
+          linear-gradient(135deg, #fff8ef, #eef7f3);
+      }
+
+      .card-body {
+        padding: 20px;
+      }
+
+      .tag {
+        display: inline-flex;
+        margin-bottom: 12px;
+        color: var(--green);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 22px;
+        line-height: 1.22;
+      }
+
+      .card p {
+        margin: 12px 0 0;
+        color: var(--muted);
+        font-size: 15px;
+      }
+
+      .open {
+        margin: 0 20px 20px;
+        min-height: 46px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background: var(--ink);
+        color: #fff;
+        font-weight: 760;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 20px;
+        color: var(--muted);
+        background: #fff;
+      }
+
+      @media (max-width: 980px) {
+        .grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 560px) {
+        .hero {
+          padding-top: 48px;
+        }
+
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="hero">
+      <div class="wrap">
+        <p class="eyebrow">GivingGetting · Public GitHub Pages</p>
+        <h1>AI 课程落地页风格库</h1>
+        <p class="lead">
+          这里集中放 AI Agent、Vibe Coding、AI 自动化课程的公开网页版本。每个风格都可以单独分享，也可以继续改成不同产品页、课程页或报名页。
+        </p>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section class="grid" aria-label="落地页风格列表">
+        <article class="card">
+          <div class="preview practical" aria-hidden="true"></div>
+          <div class="card-body">
+            <span class="tag">实操可信</span>
+            <h2>GPTs 课程助教版</h2>
+            <p>偏课程销售页，强调 60-90 分钟做出第一个可测试 AI Agent。</p>
+          </div>
+          <a class="open" href="gpts-practical/">打开页面</a>
+        </article>
+
+        <article class="card">
+          <div class="preview dark" aria-hidden="true"></div>
+          <div class="card-body">
+            <span class="tag">科技感转化</span>
+            <h2>AI 自动化实战课版</h2>
+            <p>深色首屏，适合 AI Agent、Vibe Coding、自动化获客综合课程。</p>
+          </div>
+          <a class="open" href="automation-dark/">打开页面</a>
+        </article>
+
+        <article class="card">
+          <div class="preview minimal" aria-hidden="true"></div>
+          <div class="card-body">
+            <span class="tag">极简专业</span>
+            <h2>顾问式课程页</h2>
+            <p>信息密度更高，适合投放、私域转化和给学员快速判断。</p>
+          </div>
+          <a class="open" href="minimal-pro/">打开页面</a>
+        </article>
+
+        <article class="card">
+          <div class="preview warm" aria-hidden="true"></div>
+          <div class="card-body">
+            <span class="tag">温暖创作者</span>
+            <h2>创作者成长版</h2>
+            <p>语气更柔和，适合中文创业者、自由职业者和课程老师。</p>
+          </div>
+          <a class="open" href="warm-creator/">打开页面</a>
+        </article>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">© GivingGetting · AI Course Landing Pages</div>
+    </footer>
+  </body>
+</html>
