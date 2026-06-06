@@ -698,7 +698,7 @@
             try {
               await fetch('https://primer-aorta-disclose.ngrok-free.dev/webhook/student-form', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
                 body: JSON.stringify({
                   name: document.getElementById('field-name').value,
                   email: document.getElementById('field-email').value,
