@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LangGraph 业务自动化 Agent</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0d0f14;
+  --surface: #151821;
+  --surface2: #1c2030;
+  --border: rgba(255,255,255,0.07);
+  --border-bright: rgba(255,255,255,0.14);
+  --text: #e8eaf0;
+  --text-dim: #8891a8;
+  --text-faint: #4a5168;
+  --green: #3effa0;
+  --blue: #4da6ff;
+  --orange: #ffaa44;
+  --pink: #ff6b9d;
+  --purple: #a78bfa;
+  --teal: #2dd4bf;
+  --yellow: #ffd166;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Noto Sans SC', sans-serif;
+  --serif: 'Noto Serif SC', serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 48px 20px 64px;
+}
+
+/* ─── Layout ─── */
+.page { max-width: 1020px; margin: 0 auto; }
+
+/* ─── Page header ─── */
+.page-header {
+  text-align: center;
+  margin-bottom: 52px;
+  animation: fadeIn .5s ease both;
+}
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: .1em;
+  color: var(--green); border: 1px solid rgba(62,255,160,.25);
+  background: rgba(62,255,160,.06); padding: 5px 14px; border-radius: 100px;
+  margin-bottom: 18px;
+}
+.badge-dot { width:7px; height:7px; border-radius:50%; background:var(--green);
+  box-shadow: 0 0 8px var(--green); animation: pulse 2s infinite; }
+.page-header h1 {
+  font-family: var(--serif); font-size: clamp(24px,4vw,38px); font-weight:700;
+  line-height:1.2; margin-bottom:10px;
+  background: linear-gradient(135deg, #fff 0%, #8891a8 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.page-header p { font-size:15px; color:var(--text-dim); font-weight:300; }
+
+/* ─── Section title ─── */
+.section-label {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--text-faint);
+  margin-bottom: 18px; margin-top: 48px;
+}
+.section-label::before {
+  content:''; flex:1; height:1px; background:var(--border);
+}
+.section-label::after {
+  content:''; flex:1; height:1px; background:var(--border);
+}
+
+/* ════════════════════════════════
+   SECTION 1 — Concept Flow
+════════════════════════════════ */
+.concept-flow {
+  display: flex; align-items: stretch; gap: 0;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 18px; overflow: hidden;
+  animation: fadeIn .5s .1s ease both;
+}
+
+.cf-step {
+  flex: 1; padding: 22px 18px; position: relative;
+  border-right: 1px solid var(--border);
+  transition: background .2s;
+}
+.cf-step:last-child { border-right: none; }
+.cf-step:hover { background: var(--surface2); }
+
+.cf-num {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+  color: var(--text-faint); margin-bottom: 10px;
+}
+.cf-icon { font-size: 22px; margin-bottom: 8px; }
+.cf-title {
+  font-size: 13px; font-weight: 700; margin-bottom: 6px;
+  line-height: 1.3;
+}
+.cf-desc { font-size: 11.5px; color: var(--text-dim); line-height: 1.6; font-weight:300; }
+
+.cf-arrow {
+  position: absolute; right: -13px; top: 50%;
+  transform: translateY(-50%);
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--bg); border: 1px solid var(--border-bright);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: var(--text-dim); z-index: 2;
+}
+
+/* color accents */
+.cf-step[data-c="green"]  .cf-title { color: var(--green); }
+.cf-step[data-c="blue"]   .cf-title { color: var(--blue); }
+.cf-step[data-c="orange"] .cf-title { color: var(--orange); }
+.cf-step[data-c="pink"]   .cf-title { color: var(--pink); }
+.cf-step[data-c="purple"] .cf-title { color: var(--purple); }
+.cf-step[data-c="teal"]   .cf-title { color: var(--teal); }
+
+@media (max-width: 700px) {
+  .concept-flow { flex-direction: column; }
+  .cf-step { border-right: none; border-bottom: 1px solid var(--border); }
+  .cf-step:last-child { border-bottom: none; }
+  .cf-arrow { display: none; }
+}
+
+/* ════════════════════════════════
+   SECTION 2 — LangGraph Diagram
+════════════════════════════════ */
+.lg-wrap {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 16px;
+  animation: fadeIn .5s .2s ease both;
+}
+
+@media (max-width: 760px) {
+  .lg-wrap { grid-template-columns: 1fr; }
+}
+
+/* Left: concept column */
+.lg-left {
+  display: flex; flex-direction: column; gap: 10px;
+}
+
+.concept-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 16px;
+}
+.concept-card h4 {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .08em;
+  margin-bottom: 8px; text-transform: uppercase;
+}
+.concept-card p { font-size: 12px; color: var(--text-dim); line-height: 1.6; }
+.concept-card.green h4  { color: var(--green); }
+.concept-card.blue h4   { color: var(--blue); }
+.concept-card.orange h4 { color: var(--orange); }
+.concept-card.pink h4   { color: var(--pink); }
+
+/* Right: graph */
+.lg-graph {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 18px; padding: 24px; position: relative;
+  overflow: hidden;
+}
+
+.lg-graph::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 400px 300px at 30% 20%, rgba(77,166,255,.04) 0%, transparent 70%),
+    radial-gradient(ellipse 300px 200px at 80% 80%, rgba(62,255,160,.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.graph-title {
+  font-family: var(--mono); font-size: 11px; color: var(--text-faint);
+  letter-spacing: .1em; text-transform: uppercase; margin-bottom: 20px;
+  display: flex; align-items: center; gap: 8px;
+}
+.graph-title span { color: var(--blue); }
+
+/* SVG graph */
+.graph-svg { width: 100%; height: auto; display: block; }
+
+/* Node styles */
+.node-box {
+  rx: 10; ry: 10;
+}
+
+/* ─── Code block ─── */
+.code-section {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 18px; overflow: hidden;
+  animation: fadeIn .5s .3s ease both;
+}
+
+.code-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 18px; border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,.02);
+}
+.code-dots { display:flex; gap:6px; }
+.code-dot { width:10px; height:10px; border-radius:50%; }
+.dot-r { background:#ff5f57; }
+.dot-y { background:#ffbd2e; }
+.dot-g { background:#28c840; }
+.code-label {
+  font-family: var(--mono); font-size: 11px; color: var(--text-dim);
+  letter-spacing: .06em;
+}
+
+pre {
+  padding: 22px 22px 24px;
+  font-family: var(--mono); font-size: 12.5px; line-height: 1.75;
+  overflow-x: auto; tab-size: 2;
+  color: var(--text-dim);
+}
+
+/* Syntax tokens */
+.kw   { color: var(--purple); }
+.fn   { color: var(--blue); }
+.cls  { color: var(--yellow); }
+.str  { color: var(--green); }
+.cmt  { color: #4a5168; font-style: italic; }
+.num  { color: var(--orange); }
+.deco { color: var(--pink); }
+.var  { color: var(--teal); }
+
+/* ─── Tips strip ─── */
+.tips {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+  margin-top: 16px;
+  animation: fadeIn .5s .4s ease both;
+}
+@media (max-width: 640px) { .tips { grid-template-columns: 1fr; } }
+
+.tip-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 16px;
+}
+.tip-icon { font-size: 20px; margin-bottom: 8px; }
+.tip-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.tip-desc { font-size: 12px; color: var(--text-dim); line-height: 1.6; }
+
+/* ─── Animations ─── */
+@keyframes fadeIn {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes pulse {
+  0%,100% { opacity:1; }
+  50% { opacity:.4; }
+}
+
+/* flow line in svg */
+@keyframes dash {
+  to { stroke-dashoffset: -20; }
+}
+.flow-line {
+  stroke-dasharray: 6 4;
+  animation: dash 1.2s linear infinite;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="badge">
+      <span class="badge-dot"></span>
+      LangGraph · Business Agent
+    </div>
+    <h1>零基础用 LangGraph 搭建<br>业务自动化 Agent</h1>
+    <p>从概念理解 → 图结构设计 → 代码实现，完整路径</p>
+  </div>
+
+  <!-- ─── Section 1: Concept Path ─── -->
+  <div class="section-label">第一层：概念路径</div>
+
+  <div class="concept-flow">
+    <div class="cf-step" data-c="green">
+      <div class="cf-num">01</div>
+      <div class="cf-icon">💡</div>
+      <div class="cf-title">定义业务目标</div>
+      <div class="cf-desc">你要自动化什么？<br>客服 / 报告 / 审批 / 数据处理</div>
+      <div class="cf-arrow">›</div>
+    </div>
+    <div class="cf-step" data-c="blue">
+      <div class="cf-num">02</div>
+      <div class="cf-icon">🗺️</div>
+      <div class="cf-title">拆解成节点</div>
+      <div class="cf-desc">每个步骤 = 一个 Node<br>决策分支 = 条件边</div>
+      <div class="cf-arrow">›</div>
+    </div>
+    <div class="cf-step" data-c="orange">
+      <div class="cf-num">03</div>
+      <div class="cf-icon">🔧</div>
+      <div class="cf-title">配置工具 & LLM</div>
+      <div class="cf-desc">给 Agent 配"手"<br>搜索 / 数据库 / API</div>
+      <div class="cf-arrow">›</div>
+    </div>
+    <div class="cf-step" data-c="pink">
+      <div class="cf-num">04</div>
+      <div class="cf-icon">🔗</div>
+      <div class="cf-title">构建 StateGraph</div>
+      <div class="cf-desc">用 LangGraph 把节点<br>连成有状态的流程图</div>
+      <div class="cf-arrow">›</div>
+    </div>
+    <div class="cf-step" data-c="purple">
+      <div class="cf-num">05</div>
+      <div class="cf-icon">🧪</div>
+      <div class="cf-title">测试 & 观测</div>
+      <div class="cf-desc">LangSmith 追踪每步<br>找到失败点再优化</div>
+      <div class="cf-arrow">›</div>
+    </div>
+    <div class="cf-step" data-c="teal">
+      <div class="cf-num">06</div>
+      <div class="cf-icon">🚀</div>
+      <div class="cf-title">部署上线</div>
+      <div class="cf-desc">API / Webhook / UI<br>接入真实业务系统</div>
+    </div>
+  </div>
+
+  <!-- ─── Section 2: LangGraph Architecture ─── -->
+  <div class="section-label">第二层：LangGraph 图结构</div>
+
+  <div class="lg-wrap">
+
+    <!-- Left: concepts -->
+    <div class="lg-left">
+      <div class="concept-card green">
+        <h4>State（状态）</h4>
+        <p>整个流程共享的"内存"。每个节点读取 State、写回 State，信息在节点间流动。</p>
+      </div>
+      <div class="concept-card blue">
+        <h4>Node（节点）</h4>
+        <p>一个 Python 函数。接收 State → 执行逻辑（调 LLM / 工具 / 数据库）→ 返回更新后的 State。</p>
+      </div>
+      <div class="concept-card orange">
+        <h4>Edge（边）</h4>
+        <p>普通边 = 固定走向。<br>条件边 = 根据 State 动态选择下一个节点，实现分支和循环。</p>
+      </div>
+      <div class="concept-card pink">
+        <h4>Checkpointer</h4>
+        <p>自动保存每步状态。Agent 可以暂停、回滚、人工介入后继续执行。</p>
+      </div>
+    </div>
+
+    <!-- Right: SVG flow graph -->
+    <div class="lg-graph">
+      <div class="graph-title">
+        <span>StateGraph</span> — 客户需求处理 Agent
+      </div>
+      <svg class="graph-svg" viewBox="0 0 460 580" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="rgba(255,255,255,0.25)"/>
+          </marker>
+          <marker id="arr-g" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#3effa0"/>
+          </marker>
+          <marker id="arr-o" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#ffaa44"/>
+          </marker>
+          <marker id="arr-r" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#ff6b9d"/>
+          </marker>
+          <filter id="glow-g">
+            <feGaussianBlur stdDeviation="3" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- START node -->
+        <ellipse cx="230" cy="36" rx="56" ry="22" fill="rgba(62,255,160,.12)" stroke="#3effa0" stroke-width="1.5"/>
+        <text x="230" y="41" text-anchor="middle" font-family="JetBrains Mono" font-size="12" fill="#3effa0">__start__</text>
+
+        <!-- Arrow start → receive -->
+        <line x1="230" y1="58" x2="230" y2="88" stroke="rgba(255,255,255,.18)" stroke-width="1.5" marker-end="url(#arr)" class="flow-line"/>
+
+        <!-- receive_input node -->
+        <rect x="140" y="90" width="180" height="52" rx="10" fill="rgba(77,166,255,.1)" stroke="#4da6ff" stroke-width="1.5"/>
+        <text x="230" y="111" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#4da6ff">receive_input</text>
+        <text x="230" y="130" text-anchor="middle" font-family="Noto Sans SC" font-size="10" fill="rgba(77,166,255,.6)">接收用户请求</text>
+
+        <!-- Arrow → classify -->
+        <line x1="230" y1="142" x2="230" y2="172" stroke="rgba(255,255,255,.18)" stroke-width="1.5" marker-end="url(#arr)" class="flow-line"/>
+
+        <!-- classify_intent node -->
+        <rect x="140" y="174" width="180" height="52" rx="10" fill="rgba(167,139,250,.1)" stroke="#a78bfa" stroke-width="1.5"/>
+        <text x="230" y="195" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#a78bfa">classify_intent</text>
+        <text x="230" y="214" text-anchor="middle" font-family="Noto Sans SC" font-size="10" fill="rgba(167,139,250,.6)">LLM 意图分类</text>
+
+        <!-- Conditional fork label -->
+        <text x="230" y="246" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#4a5168">conditional_edge</text>
+
+        <!-- Three branches -->
+        <!-- Left: search -->
+        <line x1="190" y1="226" x2="80" y2="290" stroke="#3effa0" stroke-width="1.5" marker-end="url(#arr-g)" stroke-dasharray="5 3"/>
+        <text x="108" y="278" font-family="JetBrains Mono" font-size="9" fill="#3effa0">查询</text>
+
+        <!-- Middle: generate -->
+        <line x1="230" y1="226" x2="230" y2="290" stroke="#ffaa44" stroke-width="1.5" marker-end="url(#arr-o)" stroke-dasharray="5 3"/>
+        <text x="235" y="268" font-family="JetBrains Mono" font-size="9" fill="#ffaa44">生成</text>
+
+        <!-- Right: escalate -->
+        <line x1="270" y1="226" x2="380" y2="290" stroke="#ff6b9d" stroke-width="1.5" marker-end="url(#arr-r)" stroke-dasharray="5 3"/>
+        <text x="330" y="278" font-family="JetBrains Mono" font-size="9" fill="#ff6b9d">转人工</text>
+
+        <!-- search_tools node -->
+        <rect x="20" y="292" width="120" height="48" rx="9" fill="rgba(62,255,160,.08)" stroke="#3effa0" stroke-width="1.2"/>
+        <text x="80" y="310" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#3effa0">search_tools</text>
+        <text x="80" y="328" text-anchor="middle" font-family="Noto Sans SC" font-size="9.5" fill="rgba(62,255,160,.55)">调用搜索 / DB</text>
+
+        <!-- generate_response node -->
+        <rect x="168" y="292" width="124" height="48" rx="9" fill="rgba(255,170,68,.08)" stroke="#ffaa44" stroke-width="1.2"/>
+        <text x="230" y="310" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#ffaa44">generate</text>
+        <text x="230" y="328" text-anchor="middle" font-family="Noto Sans SC" font-size="9.5" fill="rgba(255,170,68,.55)">LLM 生成回复</text>
+
+        <!-- escalate node -->
+        <rect x="316" y="292" width="124" height="48" rx="9" fill="rgba(255,107,157,.08)" stroke="#ff6b9d" stroke-width="1.2"/>
+        <text x="378" y="310" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#ff6b9d">escalate</text>
+        <text x="378" y="328" text-anchor="middle" font-family="Noto Sans SC" font-size="9.5" fill="rgba(255,107,157,.55)">通知人工处理</text>
+
+        <!-- Merge back to quality_check -->
+        <line x1="80" y1="340" x2="170" y2="400" stroke="rgba(255,255,255,.15)" stroke-width="1.2" marker-end="url(#arr)"/>
+        <line x1="230" y1="340" x2="230" y2="400" stroke="rgba(255,255,255,.15)" stroke-width="1.2" marker-end="url(#arr)"/>
+        <line x1="378" y1="340" x2="290" y2="400" stroke="rgba(255,255,255,.15)" stroke-width="1.2" marker-end="url(#arr)"/>
+
+        <!-- quality_check node -->
+        <rect x="140" y="402" width="180" height="52" rx="10" fill="rgba(45,212,191,.1)" stroke="#2dd4bf" stroke-width="1.5"/>
+        <text x="230" y="423" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#2dd4bf">quality_check</text>
+        <text x="230" y="442" text-anchor="middle" font-family="Noto Sans SC" font-size="10" fill="rgba(45,212,191,.6)">质量验证 + 格式化</text>
+
+        <!-- Loop back arrow (retry) -->
+        <path d="M 140 428 Q 60 428 60 300 Q 60 174 140 200" stroke="rgba(255,255,255,.1)" stroke-width="1.2" fill="none" marker-end="url(#arr)" stroke-dasharray="4 4"/>
+        <text x="28" y="310" font-family="JetBrains Mono" font-size="9" fill="#4a5168">retry</text>
+
+        <!-- Arrow → output -->
+        <line x1="230" y1="454" x2="230" y2="490" stroke="rgba(255,255,255,.18)" stroke-width="1.5" marker-end="url(#arr)" class="flow-line"/>
+
+        <!-- output node -->
+        <rect x="155" y="492" width="150" height="46" rx="10" fill="rgba(77,166,255,.08)" stroke="#4da6ff" stroke-width="1.2"/>
+        <text x="230" y="512" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#4da6ff">output_result</text>
+        <text x="230" y="530" text-anchor="middle" font-family="Noto Sans SC" font-size="10" fill="rgba(77,166,255,.55)">返回结果给用户</text>
+
+        <!-- Arrow → END -->
+        <line x1="230" y1="538" x2="230" y2="558" stroke="rgba(255,255,255,.18)" stroke-width="1.5" marker-end="url(#arr)" class="flow-line"/>
+
+        <!-- END node -->
+        <ellipse cx="230" cy="568" rx="50" ry="18" fill="rgba(62,255,160,.08)" stroke="rgba(62,255,160,.4)" stroke-width="1.2"/>
+        <text x="230" y="573" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="rgba(62,255,160,.6)">__end__</text>
+
+      </svg>
+    </div>
+  </div>
+
+  <!-- ─── Section 3: Code ─── -->
+  <div class="section-label">第三层：核心代码结构</div>
+
+  <div class="code-section">
+    <div class="code-header">
+      <div class="code-dots">
+        <div class="code-dot dot-r"></div>
+        <div class="code-dot dot-y"></div>
+        <div class="code-dot dot-g"></div>
+      </div>
+      <div class="code-label">business_agent.py — LangGraph 骨架</div>
+      <div></div>
+    </div>
+    <pre><span class="cmt"># ① 安装依赖</span>
+<span class="cmt"># pip install langgraph langchain-openai langsmith</span>
+
+<span class="kw">from</span> <span class="var">langgraph.graph</span> <span class="kw">import</span> <span class="cls">StateGraph</span>, <span class="cls">END</span>
+<span class="kw">from</span> <span class="var">typing</span> <span class="kw">import</span> <span class="cls">TypedDict</span>, <span class="cls">Annotated</span>
+<span class="kw">from</span> <span class="var">langchain_openai</span> <span class="kw">import</span> <span class="cls">ChatOpenAI</span>
+
+<span class="cmt"># ② 定义 State ── 全局共享的"记忆"</span>
+<span class="kw">class</span> <span class="cls">AgentState</span>(<span class="cls">TypedDict</span>):
+    user_input:  <span class="var">str</span>
+    intent:      <span class="var">str</span>          <span class="cmt"># 意图分类结果</span>
+    tool_result: <span class="var">str</span>          <span class="cmt"># 工具返回值</span>
+    response:    <span class="var">str</span>          <span class="cmt"># 最终回复</span>
+    quality_ok:  <span class="var">bool</span>         <span class="cmt"># 质量检查是否通过</span>
+
+<span class="cmt"># ③ 定义节点函数</span>
+<span class="var">llm</span> = <span class="cls">ChatOpenAI</span>(model=<span class="str">"gpt-4o"</span>)
+
+<span class="kw">def</span> <span class="fn">classify_intent</span>(state: <span class="cls">AgentState</span>):
+    prompt = <span class="str">f"将需求分类为 search/generate/escalate：{state['user_input']}"</span>
+    result = llm.invoke(prompt)
+    <span class="kw">return</span> {<span class="str">"intent"</span>: result.content.strip()}
+
+<span class="kw">def</span> <span class="fn">search_tools</span>(state: <span class="cls">AgentState</span>):
+    <span class="cmt"># 调用搜索工具 / 数据库查询</span>
+    <span class="kw">return</span> {<span class="str">"tool_result"</span>: <span class="str">"[搜索结果]"</span>}
+
+<span class="kw">def</span> <span class="fn">generate_response</span>(state: <span class="cls">AgentState</span>):
+    prompt = <span class="str">f"根据 {state['tool_result']} 生成回复"</span>
+    result = llm.invoke(prompt)
+    <span class="kw">return</span> {<span class="str">"response"</span>: result.content}
+
+<span class="kw">def</span> <span class="fn">quality_check</span>(state: <span class="cls">AgentState</span>):
+    ok = <span class="var">len</span>(state[<span class="str">"response"</span>]) > <span class="num">10</span>  <span class="cmt"># 简单示例</span>
+    <span class="kw">return</span> {<span class="str">"quality_ok"</span>: ok}
+
+<span class="cmt"># ④ 条件边函数 ── 路由逻辑</span>
+<span class="kw">def</span> <span class="fn">route_intent</span>(state: <span class="cls">AgentState</span>) -> <span class="var">str</span>:
+    <span class="kw">return</span> state[<span class="str">"intent"</span>]  <span class="cmt"># "search" | "generate" | "escalate"</span>
+
+<span class="kw">def</span> <span class="fn">route_quality</span>(state: <span class="cls">AgentState</span>) -> <span class="var">str</span>:
+    <span class="kw">return</span> <span class="str">"output"</span> <span class="kw">if</span> state[<span class="str">"quality_ok"</span>] <span class="kw">else</span> <span class="str">"generate"</span>
+
+<span class="cmt"># ⑤ 构建图</span>
+<span class="var">graph</span> = <span class="cls">StateGraph</span>(<span class="cls">AgentState</span>)
+
+<span class="cmt"># 添加节点</span>
+graph.add_node(<span class="str">"classify"</span>,  classify_intent)
+graph.add_node(<span class="str">"search"</span>,    search_tools)
+graph.add_node(<span class="str">"generate"</span>,  generate_response)
+graph.add_node(<span class="str">"escalate"</span>,  <span class="kw">lambda</span> s: {<span class="str">"response"</span>: <span class="str">"已转人工处理"</span>})
+graph.add_node(<span class="str">"quality"</span>,   quality_check)
+graph.add_node(<span class="str">"output"</span>,    <span class="kw">lambda</span> s: s)
+
+<span class="cmt"># 连接边</span>
+graph.set_entry_point(<span class="str">"classify"</span>)
+graph.add_conditional_edges(<span class="str">"classify"</span>, route_intent,
+    {<span class="str">"search"</span>: <span class="str">"search"</span>, <span class="str">"generate"</span>: <span class="str">"generate"</span>, <span class="str">"escalate"</span>: <span class="str">"escalate"</span>})
+graph.add_edge(<span class="str">"search"</span>,   <span class="str">"generate"</span>)
+graph.add_edge(<span class="str">"generate"</span>, <span class="str">"quality"</span>)
+graph.add_edge(<span class="str">"escalate"</span>, <span class="str">"output"</span>)
+graph.add_conditional_edges(<span class="str">"quality"</span>, route_quality,
+    {<span class="str">"output"</span>: <span class="str">"output"</span>, <span class="str">"generate"</span>: <span class="str">"generate"</span>})  <span class="cmt"># retry loop</span>
+graph.add_edge(<span class="str">"output"</span>, <span class="cls">END</span>)
+
+<span class="cmt"># ⑥ 编译 & 运行</span>
+<span class="var">app</span> = graph.compile()
+result = app.invoke({<span class="str">"user_input"</span>: <span class="str">"查一下上周的销售数据"</span>})</pre>
+  </div>
+
+  <!-- ─── Tips ─── -->
+  <div class="tips">
+    <div class="tip-card">
+      <div class="tip-icon">🔁</div>
+      <div class="tip-title">循环 = 真正的智能</div>
+      <div class="tip-desc">quality_check → generate 的回路让 Agent 自动重试，直到结果达标。这是 LangGraph 比线性 Chain 强大的核心。</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">👤</div>
+      <div class="tip-title">Human-in-the-Loop</div>
+      <div class="tip-desc">在任何节点加 interrupt_before=["escalate"] 即可让 Agent 暂停，等人工审批后继续执行。</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">🔭</div>
+      <div class="tip-title">LangSmith 可观测</div>
+      <div class="tip-desc">设置 LANGSMITH_API_KEY 后，每次运行的节点路径、LLM 调用、耗时全部可视化追踪。</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
