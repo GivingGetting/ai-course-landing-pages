@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>搭建 AI 智能体的方式</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #f7f5f0;
+  --ink:      #1a1714;
+  --ink2:     #5a5550;
+  --ink3:     #a09a93;
+  --rule:     rgba(26,23,20,.1);
+  --white:    #ffffff;
+
+  --c1: #d4420a;   /* 无代码 — 砖红 */
+  --c2: #1a6b4a;   /* 低代码 — 森绿 */
+  --c3: #1b4f8a;   /* 框架 — 深蓝 */
+  --c4: #6b3fa0;   /* 原生开发 — 紫 */
+  --c5: #b8860b;   /* 多智能体 — 金 */
+
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans:  'Noto Sans SC', sans-serif;
+  --mono:  'JetBrains Mono', monospace;
+  --r: 16px;
+}
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  padding: 52px 20px 72px;
+}
+
+.page { max-width: 980px; margin: 0 auto; }
+
+/* ── Header ── */
+.hd {
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 20px;
+  margin-bottom: 40px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  animation: up .5s ease both;
+}
+.hd-left {}
+.hd-kicker {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  margin-bottom: 8px;
+}
+.hd h1 {
+  font-family: var(--serif);
+  font-size: clamp(28px, 5vw, 46px);
+  line-height: 1.1;
+  font-weight: 400;
+}
+.hd-right {
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.7;
+  max-width: 240px;
+  text-align: right;
+}
+
+/* ── Dimension axis ── */
+.axis-row {
+  display: grid;
+  grid-template-columns: repeat(5,1fr);
+  gap: 0;
+  margin-bottom: 28px;
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  overflow: hidden;
+  animation: up .4s .08s ease both;
+}
+.axis-cell {
+  padding: 10px 12px;
+  text-align: center;
+  border-right: 1px solid var(--rule);
+  font-size: 11.5px;
+  color: var(--ink2);
+  background: var(--white);
+}
+.axis-cell:last-child { border-right: none; }
+.axis-cell strong {
+  display: block;
+  font-size: 10px;
+  font-family: var(--mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  margin-bottom: 3px;
+}
+
+/* ── Main cards ── */
+.cards { display: flex; flex-direction: column; gap: 20px; }
+
+.card {
+  background: var(--white);
+  border-radius: var(--r);
+  border: 1px solid var(--rule);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  animation: up .45s ease both;
+  transition: box-shadow .2s, transform .2s;
+}
+.card:hover { box-shadow: 0 8px 32px rgba(0,0,0,.09); transform: translateY(-2px); }
+.card:nth-child(1) { animation-delay: .10s; }
+.card:nth-child(2) { animation-delay: .15s; }
+.card:nth-child(3) { animation-delay: .20s; }
+.card:nth-child(4) { animation-delay: .25s; }
+.card:nth-child(5) { animation-delay: .30s; }
+
+@media (max-width: 680px) {
+  .card { grid-template-columns: 1fr; }
+  .axis-row { grid-template-columns: 1fr 1fr; }
+}
+
+/* Left panel */
+.card-left {
+  padding: 24px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-right: 1px solid var(--rule);
+  position: relative;
+  overflow: hidden;
+}
+.card-left::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: 4px;
+  background: var(--accent);
+}
+
+.card-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink3);
+  letter-spacing: .1em;
+}
+.card-title {
+  font-family: var(--serif);
+  font-size: 22px;
+  line-height: 1.2;
+  color: var(--accent);
+}
+.card-en {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink3);
+  letter-spacing: .04em;
+}
+.card-tagline {
+  font-size: 12px;
+  color: var(--ink2);
+  line-height: 1.6;
+  margin-top: 4px;
+}
+
+/* meters */
+.meters { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+.meter-row { display: flex; align-items: center; gap: 8px; }
+.meter-label { font-size: 10px; font-family: var(--mono); color: var(--ink3); width: 44px; flex-shrink: 0; }
+.meter-bar { flex: 1; height: 5px; background: rgba(0,0,0,.07); border-radius: 3px; overflow: hidden; }
+.meter-fill { height: 100%; border-radius: 3px; background: var(--accent); opacity: .7; }
+
+/* Right panel */
+.card-right {
+  padding: 24px 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 28px;
+}
+
+.section-head {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  margin-bottom: 8px;
+}
+
+.tools-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.tool-chip {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 100px;
+  background: rgba(0,0,0,.04);
+  border: 1px solid var(--rule);
+  color: var(--ink2);
+}
+.tool-chip.accent {
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 20%, transparent);
+  color: var(--accent);
+}
+
+.pros-list, .cons-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.pros-list li::before { content: '+  '; color: #1a6b4a; font-weight: 700; font-family: var(--mono); font-size: 11px; }
+.cons-list li::before { content: '−  '; color: #c0392b; font-weight: 700; font-family: var(--mono); font-size: 11px; }
+.pros-list li, .cons-list li {
+  font-size: 12.5px;
+  color: var(--ink2);
+  line-height: 1.55;
+}
+
+.use-cases { grid-column: 1 / -1; }
+.use-cases-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+.use-case {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(0,0,0,.03);
+  border: 1px solid var(--rule);
+  color: var(--ink);
+}
+
+/* accent vars per card */
+.card-1 { --accent: var(--c1); }
+.card-2 { --accent: var(--c2); }
+.card-3 { --accent: var(--c3); }
+.card-4 { --accent: var(--c4); }
+.card-5 { --accent: var(--c5); }
+
+/* ── Comparison table ── */
+.cmp-wrap {
+  margin-top: 32px;
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  overflow: hidden;
+  animation: up .4s .35s ease both;
+}
+.cmp-title {
+  padding: 14px 20px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  border-bottom: 1px solid var(--rule);
+  background: rgba(0,0,0,.02);
+}
+table {
+  width: 100%; border-collapse: collapse;
+  font-size: 13px;
+}
+th {
+  padding: 10px 14px;
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  background: rgba(0,0,0,.02);
+  border-bottom: 1px solid var(--rule);
+}
+td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink2);
+  vertical-align: middle;
+}
+tr:last-child td { border-bottom: none; }
+td:first-child { font-weight: 600; color: var(--ink); }
+.dot-row { display: flex; gap: 3px; }
+.dot { width: 9px; height: 9px; border-radius: 50%; }
+.dot.on  { opacity: 1; }
+.dot.off { opacity: .15; background: var(--ink3) !important; }
+
+/* ── Footer callout ── */
+.callout {
+  margin-top: 20px;
+  padding: 18px 22px;
+  border-radius: var(--r);
+  border-left: 4px solid var(--ink);
+  background: var(--white);
+  font-size: 13.5px;
+  color: var(--ink2);
+  line-height: 1.7;
+  animation: up .4s .4s ease both;
+}
+.callout strong { color: var(--ink); }
+
+@keyframes up {
+  from { opacity:0; transform:translateY(18px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="hd">
+    <div class="hd-left">
+      <div class="hd-kicker">方法论全景 · 2025</div>
+      <h1>搭建 AI 智能体<br><em>有哪些方式？</em></h1>
+    </div>
+    <div class="hd-right">从拖拽零代码到原生框架，<br>五种路径对应不同起点与目标。</div>
+  </div>
+
+  <!-- Cards -->
+  <div class="cards">
+
+    <!-- 1. 无代码 -->
+    <div class="card card-1">
+      <div class="card-left">
+        <div class="card-num">方式 01</div>
+        <div class="card-title">无代码平台</div>
+        <div class="card-en">No-Code Platforms</div>
+        <div class="card-tagline">拖拽连线即可搭建，不写一行代码。适合快速验证业务想法。</div>
+        <div class="meters">
+          <div class="meter-row"><span class="meter-label">入门</span><div class="meter-bar"><div class="meter-fill" style="width:95%"></div></div></div>
+          <div class="meter-row"><span class="meter-label">灵活</span><div class="meter-bar"><div class="meter-fill" style="width:30%"></div></div></div>
+          <div class="meter-row"><span class="meter-label">扩展</span><div class="meter-bar"><div class="meter-fill" style="width:25%"></div></div></div>
+        </div>
+      </div>
+      <div class="card-right">
+        <div>
+          <div class="section-head">代表工具</div>
+          <div class="tools-list">
+            <span class="tool-chip accent">Coze / 扣子</span>
+            <span class="tool-chip accent">Dify</span>
+            <span class="tool-chip">Zapier AI</span>
+            <span class="tool-chip">Make</span>
+            <span class="tool-chip">Voiceflow</span>
+            <span class="tool-chip">Flowise</span>
+          </div>
+        </div>
+        <div>
+          <div class="section-head">优 / 劣</div>
+          <ul class="pros-list">
+            <li>上手时间以小时计</li>
+            <li>内置模板和工具库</li>
+            <li>无需服务器运维</li>
+          </ul>
+          <ul class="cons-list" style="margin-top:6px">
+            <li>逻辑复杂时受限</li>
+            <li>依赖平台生死存亡</li>
+          </ul>
+        </div>
+        <div class="use-cases">
+          <div class="section-head">适用场景</div>
+          <div class="use-cases-grid">
+            <span class="use-case">客服问答机器人</span>
+            <span class="use-case">内容生成助手</span>
+            <span class="use-case">表单自动回复</span>
+            <span class="use-case">简单审批流</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. 低代码自动化 -->
+    <div class="card card-2">
+      <div class="card-left">
+        <div class="card-num">方式 02</div>
+        <div class="card-title">低代码<br>自动化工作流</div>
+        <div class="card-en">Low-Code Workflow</div>
+        <div class="card-tagline">可视化流程 + 少量脚本，连接真实业务系统。比纯无代码更灵活。</div>
+        <div class="meters">
+          <div class="meter-row"><span class="meter-label">入门</span><div class="meter-bar"><div class="meter-fill" style="width:70%"></div></div></div>
+          <div class="meter-row"><span class="meter-label">灵活</span><div class="meter-bar"><div class="meter-fill" style="width:65%"></div></div></div>
+          <div class="meter-row"><span class="meter-label">扩展</span><div class="meter-bar"><div class="meter-fill" style="width:55%"></div></div></div>
+        </div>
+      </div>
+      <div class="card-right">
+        <div>
+          <div class="section-head">代表工具</div>
+          <div class="tools-list">
+            <span class="tool-chip accent">n8n</span>
+            <span class="tool-chip accent">Dify（进阶）</span>
+            <span class="tool-chip">Make</span>
+            <span class="tool-chip">Activepieces</span>
+            <span class="tool-chip">Botpress</span>
+          </div>
+        </div>
+        <div>
+          <div class="section-head">优 / 劣</div>
+          <ul class="pros-list">
+            <li>可自托管，数据自控</li>
+            <li>支持 Webhook / API 接入</li>
+            <li>社区模板丰富</li>
+          </ul>
+          <ul class="cons-list" style="margin-top:6px">
+            <li>复杂分支调试费时</li>
+            <li>仍有逻辑天花板</li>
+          </ul>
+        </div>
+        <div class="use-cases">
+          <div class="section-head">适用场景</div>
+          <div class="use-cases-grid">
+            <span class="use-case">CRM 数据同步</span>
+            <span class="use-case">定时报告生成</span>
+            <span class="use-case">多平台内容分发</span>
+            <span class="use-case">邮件智能分拣</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. AI 框架 -->
+    <div class="card card-3">
+      <div class="card-left">
+        <div class="card-num">方式 03</div>
+        <div class="card-title">AI Agent<br>开发框架</div>
+        <div class="card-en">Agent Frameworks</div>
+        <div class="card-tagline">用 Python 调用专为 Agent 设计的库，兼顾灵活性和工程规范。推荐有代码基础者的首选。</div>
+        <div class="meters">
+          <div class="meter-row"><span class="meter-label">入门</span><div class="meter-bar"><div class="meter-fill" style="width:45%"></div></div></div>
+          <div class="meter-row"><span class="meter-label">灵活</span><div class="meter-bar"><div class="meter-fill" style="width:88%"></div></div></div>
+          <div class="meter-row"><span class="meter-label">扩展</span><div class="meter-bar"><div class="meter-fill" style="width:85%"></div></div></div>
+        </div>
+      </div>
+      <div class="card-right">
+        <div>
+          <div class="section-head">代表工具</div>
+          <div class="tools-list">
+            <span class="tool-chip accent">LangGraph</span>
+            <span class="tool-chip accent">LangChain</span>
+            <span class="tool-chip">CrewAI</span>
+            <span class="tool-chip">AutoGen</span>
+            <span class="tool-chip">Haystack</span>
+            <span class="tool-chip">Pydantic AI</span>
+          </div>
+        </div>
+        <div>
+          <div class="section-head">优 / 劣</div>
+          <ul class="pros-list">
+            <li>完整工程控制权</li>
+            <li>支持循环 / 回溯 / 人工介入</li>
+            <li>可观测性强（LangSmith）</li>
+          </ul>
+          <ul class="cons-list" style="margin-top:6px">
+            <li>需要 Python 基础</li>
+            <li>部署需要自建环境</li>
+          </ul>
+        </div>
+        <div class="use-cases">
+          <div class="section-head">适用场景</div>
+          <div class="use-cases-grid">
+            <span class="use-case">业务流程自动化</span>
+            <span class="use-case">RAG 知识库问答</span>
+            <span class="use-case">代码助手</span>
+            <span class="use-case">复杂决策 Agent</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. 原生 API -->
+    <div class="card card-4">
+      <div class="card-left">
+        <div class="card-num">方式 04</div>
+        <div class="card-title">原生 API<br>自主开发</div>
+        <div class="card-en">Native API Build</div>
+        <div class="card-tagline">直接调用 OpenAI / Claude / Gemini API，自己实现 Agent 逻辑。最高自由度，也最重。</div>
+        <div class="meters">
+          <div class="meter-row"><span class="meter-label">入门</span><div class="meter-bar"><div class="meter-fill" style="width:20%"></div></div></div>
+          <div class="meter-row"><span class="meter-label">灵活</span><div class="meter-bar"><div class="meter-fill" style="width:100%"></div></div></div>
+          <div class="meter-row"><span class="meter-label">扩展</span><div class="meter-bar"><div class="meter-fill" style="width:95%"></div></div></div>
+        </div>
+      </div>
+      <div class="card-right">
+        <div>
+          <div class="section-head">代表工具</div>
+          <div class="tools-list">
+            <span class="tool-chip accent">OpenAI API</span>
+            <span class="tool-chip accent">Claude API</span>
+            <span class="tool-chip">Gemini API</span>
+            <span class="tool-chip">Ollama（本地）</span>
+            <span class="tool-chip">vLLM</span>
+          </div>
+        </div>
+        <div>
+          <div class="section-head">优 / 劣</div>
+          <ul class="pros-list">
+            <li>零依赖、完全可控</li>
+            <li>性能最优、成本可精细控制</li>
+            <li>适合嵌入产品核心</li>
+          </ul>
+          <ul class="cons-list" style="margin-top:6px">
+            <li>状态管理、工具调用全自写</li>
+            <li>开发周期长</li>
+          </ul>
+        </div>
+        <div class="use-cases">
+          <div class="section-head">适用场景</div>
+          <div class="use-cases-grid">
+            <span class="use-case">SaaS 产品内嵌 AI</span>
+            <span class="use-case">企业私有化部署</span>
+            <span class="use-case">高并发生产系统</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. 多智能体 -->
+    <div class="card card-5">
+      <div class="card-left">
+        <div class="card-num">方式 05</div>
+        <div class="card-title">多智能体<br>协作系统</div>
+        <div class="card-en">Multi-Agent Systems</div>
+        <div class="card-tagline">多个 Agent 分工协作，像一个"AI 团队"各司其职，处理复杂任务。</div>
+        <div class="meters">
+          <div class="meter-row"><span class="meter-label">入门</span><div class="meter-bar"><div class="meter-fill" style="width:15%"></div></div></div>
+          <div class="meter-row"><span class="meter-label">灵活</span><div class="meter-bar"><div class="meter-fill" style="width:95%"></div></div></div>
+          <div class="meter-row"><span class="meter-label">扩展</span><div class="meter-bar"><div class="meter-fill" style="width:100%"></div></div></div>
+        </div>
+      </div>
+      <div class="card-right">
+        <div>
+          <div class="section-head">代表工具</div>
+          <div class="tools-list">
+            <span class="tool-chip accent">CrewAI</span>
+            <span class="tool-chip accent">AutoGen</span>
+            <span class="tool-chip">LangGraph Multi</span>
+            <span class="tool-chip">OpenAI Swarm</span>
+            <span class="tool-chip">AgentScope</span>
+          </div>
+        </div>
+        <div>
+          <div class="section-head">优 / 劣</div>
+          <ul class="pros-list">
+            <li>可处理超复杂任务</li>
+            <li>Agent 专业分工效果好</li>
+            <li>人类无法手动拆解的流程</li>
+          </ul>
+          <ul class="cons-list" style="margin-top:6px">
+            <li>调试难度高</li>
+            <li>token 消耗大、成本高</li>
+          </ul>
+        </div>
+        <div class="use-cases">
+          <div class="section-head">适用场景</div>
+          <div class="use-cases-grid">
+            <span class="use-case">自动化研究报告</span>
+            <span class="use-case">全链路营销执行</span>
+            <span class="use-case">软件自动开发</span>
+            <span class="use-case">复杂数据分析</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /cards -->
+
+  <!-- Comparison table -->
+  <div class="cmp-wrap">
+    <div class="cmp-title">五种方式横向对比</div>
+    <table>
+      <thead>
+        <tr>
+          <th>方式</th>
+          <th>技术门槛</th>
+          <th>开发速度</th>
+          <th>灵活程度</th>
+          <th>推荐起点</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="color:var(--c1)">① 无代码平台</td>
+          <td>
+            <div class="dot-row">
+              <div class="dot on" style="background:var(--c1)"></div>
+              <div class="dot off"></div><div class="dot off"></div><div class="dot off"></div><div class="dot off"></div>
+            </div>
+          </td>
+          <td>
+            <div class="dot-row">
+              <div class="dot on" style="background:var(--c1)"></div>
+              <div class="dot on" style="background:var(--c1)"></div>
+              <div class="dot on" style="background:var(--c1)"></div>
+              <div class="dot on" style="background:var(--c1)"></div>
+              <div class="dot on" style="background:var(--c1)"></div>
+            </div>
+          </td>
+          <td>
+            <div class="dot-row">
+              <div class="dot on" style="background:var(--c1)"></div>
+              <div class="dot off"></div><div class="dot off"></div><div class="dot off"></div><div class="dot off"></div>
+            </div>
+          </td>
+          <td>零代码基础，想快速验证</td>
+        </tr>
+        <tr>
+          <td style="color:var(--c2)">② 低代码工作流</td>
+          <td>
+            <div class="dot-row">
+              <div class="dot on" style="background:var(--c2)"></div>
+              <div class="dot on" style="background:var(--c2)"></div>
+              <div class="dot off"></div><div class="dot off"></div><div class="dot off"></div>
+            </div>
+          </td>
+          <td>
+            <div class="dot-row">
+              <div class="dot on" style="background:var(--c2)"></div>
+              <div class="dot on" style="background:var(--c2)"></div>
+              <div class="dot on" style="background:var(--c2)"></div>
+              <div class="dot on" style="background:var(--c2)"></div>
+              <div class="dot off"></div>
+            </div>
+          </td>
+          <td>
+            <div class="dot-row">
+              <div class="dot on" style="background:var(--c2)"></div>
+              <div class="dot on" style="background:var(--c2)"></div>
+              <div class="dot on" style="background:var(--c2)"></div>
+              <div class="dot off"></div><div class="dot off"></div>
+            </div>
+          </td>
+          <td>懂一点逻辑，需要接真实系统</td>
+        </tr>
+        <tr>
+          <td style="color:var(--c3)">③ AI 框架</td>
+          <td>
+            <div class="dot-row">
+              <div class="dot on" style="background:var(--c3)"></div>
+              <div class="dot on" style="background:var(--c3)"></div>
+              <div class="dot on" style="background:var(--c3)"></div>
+              <div class="dot off"></div><div class="dot off"></div>
+            </div>
+          </td>
+          <td>
+            <div class="dot-row">
+              <div class="dot on" style="background:var(--c3)"></div>
+              <div class="dot on" style="background:var(--c3)"></div>
+              <div class="dot on" style="background:var(--c3)"></div>
+              <div class="dot off"></div><div class="dot off"></div>
+            </div>
+          </td>
+          <td>
+            <div class="dot-row">
+              <div class="dot on" style="background:var(--c3)"></div>
+              <div class="dot on" style="background:var(--c3)"></div>
+              <div class="dot on" style="background:var(--c3)"></div>
+              <div class="dot on" style="background:var(--c3)"></div>
+              <div class="dot off"></div>
+            </div>
+          </td>
+          <td>有 Python 基础，做正式项目</td>
+        </tr>
+        <tr>
+          <td style="color:var(--c4)">④ 原生 API</td>
+          <td>
+            <div class="dot-row">
+              <div class="dot on" style="background:var(--c4)"></div>
+              <div class="dot on" style="background:var(--c4)"></div>
+              <div class="dot on" style="background:var(--c4)"></div>
+              <div class="dot on" style="background:var(--c4)"></div>
+              <div class="dot off"></div>
+            </div>
+          </td>
+          <td>
+            <div class="dot-row">
+              <div class="dot on" style="background:var(--c4)"></div>
+              <div class="dot on" style="background:var(--c4)"></div>
+              <div class="dot off"></div><div class="dot off"></div><div class="dot off"></div>
+            </div>
+          </td>
+          <td>
+            <div class="dot-row">
+              <div class="dot on" style="background:var(--c4)"></div>
+              <div class="dot on" style="background:var(--c4)"></div>
+              <div class="dot on" style="background:var(--c4)"></div>
+              <div class="dot on" style="background:var(--c4)"></div>
+              <div class="dot on" style="background:var(--c4)"></div>
+            </div>
+          </td>
+          <td>工程师，做产品级嵌入</td>
+        </tr>
+        <tr>
+          <td style="color:var(--c5)">⑤ 多智能体</td>
+          <td>
+            <div class="dot-row">
+              <div class="dot on" style="background:var(--c5)"></div>
+              <div class="dot on" style="background:var(--c5)"></div>
+              <div class="dot on" style="background:var(--c5)"></div>
+              <div class="dot on" style="background:var(--c5)"></div>
+              <div class="dot on" style="background:var(--c5)"></div>
+            </div>
+          </td>
+          <td>
+            <div class="dot-row">
+              <div class="dot on" style="background:var(--c5)"></div>
+              <div class="dot on" style="background:var(--c5)"></div>
+              <div class="dot off"></div><div class="dot off"></div><div class="dot off"></div>
+            </div>
+          </td>
+          <td>
+            <div class="dot-row">
+              <div class="dot on" style="background:var(--c5)"></div>
+              <div class="dot on" style="background:var(--c5)"></div>
+              <div class="dot on" style="background:var(--c5)"></div>
+              <div class="dot on" style="background:var(--c5)"></div>
+              <div class="dot on" style="background:var(--c5)"></div>
+            </div>
+          </td>
+          <td>有 Agent 经验，处理超复杂任务</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Callout -->
+  <div class="callout">
+    💡 <strong>选择建议：</strong>大多数业务问题用 ① + ② 就能解决 80%。需要精细控制循环逻辑时升级到 ③ LangGraph。④ 和 ⑤ 留给真正需要产品级稳定性或超复杂任务编排的场景。<strong>先跑起来，再考虑升级。</strong>
+  </div>
+
+</div>
+</body>
+</html>
