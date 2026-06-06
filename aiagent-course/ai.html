@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 智能体学习路径指南</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #fcfaf7;
+            color: #2d3436;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        .step-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .active-step {
+            border-color: #6366f1;
+            background-color: #ffffff;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Chosen Palette: Warm Neutrals & Indigo (主色调：温暖中性色 #fcfaf7，强调色：靛蓝色 #4f46e5) -->
+    <!-- Application Structure Plan: 
+        采用“学习路线图”式的交互结构。顶部为概览和核心公式说明，中部为五个步骤的交互式切换卡片。
+        每个步骤关联特定的可视化图表（Chart.js）和详细的内容解释。
+        这种结构将线性报告转化为非线性的探索空间，用户可以根据兴趣点击特定步骤，同时通过动态图表直观理解智能体各组成部分的权重和学习曲线。
+    -->
+    <!-- Visualization & Content Choices: 
+        1. 架构理解 -> 环形图 (Donut Chart) -> 展示 Agent 的四大核心要素权重 -> 强调公式化理解。
+        2. 提示词工程 -> 交互式对比列表 -> 展示普通 Prompt 与结构化 Prompt 的差异。
+        3. 低代码平台 -> 条形图 (Bar Chart) -> 比较主流平台的上手难度与功能天花板。
+        4. 开发框架 -> 雷达图 (Radar Chart) -> 比较 LangChain 与 CrewAI 的适用场景。
+        5. 实战项目 -> 交互式进度检查表 -> 引导用户规划自己的实战路径。
+        确认：无 SVG，无 Mermaid JS，图表全部采用 Canvas + Chart.js 渲染。
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <div class="max-w-6xl mx-auto px-4 py-12">
+        <!-- Header -->
+        <header class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 gradient-text">AI 智能体学习路径指南</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">从使用者进化为创造者：系统化掌握 AI 智能体（Agents）的核心技术与实战思维。</p>
+        </header>
+
+        <!-- Intro Section -->
+        <section class="mb-16 bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+            <div class="flex flex-col md:flex-row items-center gap-8">
+                <div class="flex-1">
+                    <h2 class="text-2xl font-bold mb-4">什么是 AI 智能体？</h2>
+                    <p class="text-gray-600 leading-relaxed mb-4">
+                        与普通聊天机器人不同，智能体拥有自主决策和执行任务的能力。本节展示了智能体的核心构成。在进入具体步骤前，理解这个公式至关重要。
+                    </p>
+                    <div class="bg-indigo-50 p-4 rounded-xl border-l-4 border-indigo-500">
+                        <code class="text-indigo-800 font-bold text-lg">Agent = LLM (大脑) + 规划 + 记忆 + 工具调用</code>
+                    </div>
+                </div>
+                <div class="flex-1 w-full">
+                    <div class="chart-container">
+                        <canvas id="formulaChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Steps Section -->
+        <section id="roadmap" class="mb-16">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold mb-2">学习路线图</h2>
+                <p class="text-gray-500">点击下方步骤卡片，探索每一个阶段的核心重点与工具选择。</p>
+            </div>
+
+            <!-- Step Navigation Tabs -->
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+                <button onclick="switchStep(1)" id="tab-1" class="step-card p-6 rounded-2xl border-2 border-transparent bg-gray-50 hover:bg-white text-left active-step">
+                    <span class="block text-sm font-bold text-indigo-500 mb-1">STEP 01</span>
+                    <span class="font-semibold">底层架构</span>
+                </button>
+                <button onclick="switchStep(2)" id="tab-2" class="step-card p-6 rounded-2xl border-2 border-transparent bg-gray-50 hover:bg-white text-left">
+                    <span class="block text-sm font-bold text-indigo-500 mb-1">STEP 02</span>
+                    <span class="font-semibold">提示词工程</span>
+                </button>
+                <button onclick="switchStep(3)" id="tab-3" class="step-card p-6 rounded-2xl border-2 border-transparent bg-gray-50 hover:bg-white text-left">
+                    <span class="block text-sm font-bold text-indigo-500 mb-1">STEP 03</span>
+                    <span class="font-semibold">低代码平台</span>
+                </button>
+                <button onclick="switchStep(4)" id="tab-4" class="step-card p-6 rounded-2xl border-2 border-transparent bg-gray-50 hover:bg-white text-left">
+                    <span class="block text-sm font-bold text-indigo-500 mb-1">STEP 04</span>
+                    <span class="font-semibold">开发框架</span>
+                </button>
+                <button onclick="switchStep(5)" id="tab-5" class="step-card p-6 rounded-2xl border-2 border-transparent bg-gray-50 hover:bg-white text-left">
+                    <span class="block text-sm font-bold text-indigo-500 mb-1">STEP 05</span>
+                    <span class="font-semibold">实战优化</span>
+                </button>
+            </div>
+
+            <!-- Content Area -->
+            <div id="step-content" class="bg-white rounded-3xl p-8 shadow-md min-h-[500px] flex flex-col md:flex-row gap-8">
+                <div class="flex-1" id="text-content">
+                    <!-- Dynamic Text Injection -->
+                </div>
+                <div class="flex-1 w-full flex items-center justify-center" id="visual-content">
+                    <div class="chart-container" id="canvas-wrapper">
+                        <canvas id="stepChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Practical Tips -->
+        <footer class="text-center py-12 border-t border-gray-200">
+            <h3 class="text-xl font-bold mb-4">准备好开启你的智能体之旅了吗？</h3>
+            <p class="text-gray-500 mb-6">利用 ChatGPT 作为你的私人导师，它可以为你解答每一个步骤中的技术难点。</p>
+            <div class="flex justify-center gap-4">
+                <div class="px-6 py-3 bg-gray-900 text-white rounded-full font-medium cursor-pointer hover:bg-gray-800 transition">立即开始学习</div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        let currentChart = null;
+        const stepData = {
+            1: {
+                title: "理解智能体底层架构",
+                intro: "智能体的大脑（LLM）需要配合规划、记忆和工具才能解决真实问题。理解架构是为了让你在设计时知道该在哪个环节增强系统能力。",
+                details: [
+                    "<b>感知</b>：系统如何接收和理解环境数据。",
+                    "<b>规划</b>：学习 ReAct 模式，即 AI 如何“思考一步，行动一步”。",
+                    "<b>记忆</b>：分为短期记忆（对话上下文）和长期记忆（外部知识库）。",
+                    "<b>执行</b>：将自然语言转化为真实的工具调用。"
+                ],
+                chartType: 'pie',
+                chartLabel: '核心组件关键度分布',
+                chartValues: [40, 20, 20, 20],
+                chartLabels: ['LLM核心', '规划逻辑', '记忆系统', '工具接口']
+            },
+            2: {
+                title: "掌握结构化提示词工程",
+                intro: "智能体的稳定性高度依赖于指令的质量。学习如何赋予 AI 一个清晰的角色并规范其任务拆解逻辑。",
+                details: [
+                    "<b>角色设定</b>：不仅仅是'你是一个助手'，而是精细化职能定义。",
+                    "<b>思维链 (CoT)</b>：强迫 AI 输出中间思考过程，提升复杂逻辑准确性。",
+                    "<b>少样本学习</b>：通过 1-2 个 JSON 示例，约束 AI 的返回格式。",
+                    "<b>反思机制</b>：在 Prompt 中要求 AI 在输出前自检结果。"
+                ],
+                chartType: 'bar',
+                chartLabel: '提示词技术对 Agent 稳定性的提升 (估值)',
+                chartValues: [30, 85, 95, 70],
+                chartLabels: ['简单指令', '角色设定', '结构化模版', 'Few-shot']
+            },
+            3: {
+                title: "利用低代码平台快速开发",
+                intro: "在写代码之前，先在可视化平台上验证逻辑。这是从 0 到 1 最快的路径。",
+                details: [
+                    "<b>Coze (扣子)</b>：功能极其强大，适合快速搭建复杂插件流。",
+                    "<b>Dify</b>：开源、私有化部署的首选，支持精细的 RAG 配置。",
+                    "<b>GPTs</b>：最简单的个人定制化方案，但工具调用灵活性受限。",
+                    "<b>工作流思维</b>：学习如何用拖拽式节点连接不同的 API 和插件。"
+                ],
+                chartType: 'bar',
+                chartLabel: '平台学习门槛 vs 功能上限',
+                chartValues: [40, 70, 90, 85],
+                chartLabels: ['GPTs (易)', 'Coze (中)', 'Dify (中)', 'LangFlow (难)']
+            },
+            4: {
+                title: "学习 Agent 专业开发框架",
+                intro: "当你需要多智能体协作或企业级应用时，必须进入代码开发阶段。",
+                details: [
+                    "<b>LangChain</b>：最广泛的集成框架，适合构建基础 Agent 流程。",
+                    "<b>LangGraph</b>：专注于有环图的复杂状态管理，解决长链路任务。",
+                    "<b>CrewAI / AutoGen</b>：多智能体分工协作框架，让 AI 们开会解决问题。",
+                    "<b>状态机思维</b>：理解 Agent 在任务执行中的不同状态转换。"
+                ],
+                chartType: 'radar',
+                chartLabel: '主流框架能力图',
+                chartValues: [95, 80, 70, 85, 60],
+                chartLabels: ['生态丰富度', '状态管理', '易上手度', '多Agent协作', '执行效率']
+            },
+            5: {
+                title: "实战项目与迭代优化",
+                intro: "实战是检验真理的唯一标准。通过构建、测试、纠错，完成技能闭环。",
+                details: [
+                    "<b>初期项目</b>：自动化邮件处理助手或知识库问答机器人。",
+                    "<b>中期项目</b>：能够自主执行 SQL 并生成报表的财务 Agent。",
+                    "<b>安全边界</b>：学习如何防止智能体陷入无限循环或执行恶意指令。",
+                    "<b>人在回路 (HITL)</b>：在关键决策点加入人类确认机制。"
+                ],
+                chartType: 'line',
+                chartLabel: '学习曲线与产出比',
+                chartValues: [10, 30, 45, 80, 95],
+                chartLabels: ['第1周', '第2周', '第4周', '第8周', '第12周']
+            }
+        };
+
+        function switchStep(stepNum) {
+            // Update UI tabs
+            document.querySelectorAll('.step-card').forEach(card => card.classList.remove('active-step'));
+            document.getElementById(`tab-${stepNum}`).classList.add('active-step');
+
+            const data = stepData[stepNum];
+            const contentDiv = document.getElementById('text-content');
+            
+            // Inject Text
+            let detailsHtml = data.details.map(d => `<li class="mb-3 flex items-start"><span class="text-indigo-500 mr-2">•</span><span>${d}</span></li>`).join('');
+            contentDiv.innerHTML = `
+                <h3 class="text-3xl font-bold mb-4">${data.title}</h3>
+                <p class="text-gray-600 mb-6 text-lg">${data.intro}</p>
+                <ul class="text-gray-700 mb-6">
+                    ${detailsHtml}
+                </ul>
+                <div class="mt-auto">
+                    <span class="text-sm font-semibold text-indigo-400 uppercase tracking-widest">关键建议</span>
+                    <p class="text-sm text-gray-500 italic mt-1">建议在本阶段投入至少 10-15 小时的刻意练习。</p>
+                </div>
+            `;
+
+            updateStepChart(data);
+        }
+
+        function updateStepChart(data) {
+            if (currentChart) currentChart.destroy();
+            
+            const ctx = document.getElementById('stepChart').getContext('2d');
+            currentChart = new Chart(ctx, {
+                type: data.chartType,
+                data: {
+                    labels: data.chartLabels,
+                    datasets: [{
+                        label: data.chartLabel,
+                        data: data.chartValues,
+                        backgroundColor: [
+                            'rgba(79, 70, 229, 0.6)',
+                            'rgba(6, 182, 212, 0.6)',
+                            'rgba(139, 92, 246, 0.6)',
+                            'rgba(236, 72, 153, 0.6)',
+                            'rgba(245, 158, 11, 0.6)'
+                        ],
+                        borderColor: '#ffffff',
+                        borderWidth: 2,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 12 } } },
+                        tooltip: { enabled: true }
+                    },
+                    scales: data.chartType !== 'pie' && data.chartType !== 'radar' ? {
+                        y: { beginAtZero: true, grid: { display: false } }
+                    } : {}
+                }
+            });
+        }
+
+        // Initial Chart for Formula
+        const formulaCtx = document.getElementById('formulaChart').getContext('2d');
+        new Chart(formulaCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['LLM (大脑)', '规划 (Planning)', '记忆 (Memory)', '工具 (Tools)'],
+                datasets: [{
+                    data: [40, 20, 20, 20],
+                    backgroundColor: ['#4f46e5', '#818cf8', '#a5b4fc', '#c7d2fe'],
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'right' }
+                }
+            }
+        });
+
+        // Initialize with Step 1
+        window.onload = () => switchStep(1);
+    </script>
+</body>
+</html>
