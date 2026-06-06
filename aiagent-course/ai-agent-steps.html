@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>零基础搭建 AI 智能体</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f5f5f7;
+    --white: #ffffff;
+    --text-primary: #1d1d1f;
+    --text-secondary: #6e6e73;
+    --text-tertiary: #aeaeb2;
+    --accent-blue: #0071e3;
+    --accent-teal: #30b0c7;
+    --accent-green: #34c759;
+    --accent-orange: #ff9500;
+    --accent-purple: #af52de;
+    --accent-red: #ff3b30;
+    --border: rgba(0,0,0,0.08);
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+    --shadow-md: 0 8px 32px rgba(0,0,0,0.08);
+    --shadow-lg: 0 20px 60px rgba(0,0,0,0.10);
+    --radius: 20px;
+  }
+
+  body {
+    font-family: 'Noto Sans SC', -apple-system, sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 48px 24px;
+    color: var(--text-primary);
+  }
+
+  .container {
+    width: 100%;
+    max-width: 960px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 56px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .header-label {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-blue);
+    background: rgba(0,113,227,0.08);
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 16px;
+  }
+
+  .header h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+  }
+
+  .header p {
+    font-size: 16px;
+    color: var(--text-secondary);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  /* Steps grid */
+  .steps {
+    display: grid;
+    gap: 16px;
+    position: relative;
+  }
+
+  /* Connector line */
+  .steps::before {
+    content: '';
+    position: absolute;
+    left: 50px;
+    top: 60px;
+    bottom: 60px;
+    width: 2px;
+    background: linear-gradient(to bottom,
+      var(--accent-blue),
+      var(--accent-teal),
+      var(--accent-green),
+      var(--accent-orange),
+      var(--accent-purple),
+      var(--accent-red)
+    );
+    opacity: 0.2;
+    z-index: 0;
+  }
+
+  .step-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 28px 28px 28px 24px;
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 20px;
+    align-items: flex-start;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    position: relative;
+    z-index: 1;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .step-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .step-card:nth-child(1) { animation-delay: 0.05s; --card-color: var(--accent-blue); }
+  .step-card:nth-child(2) { animation-delay: 0.10s; --card-color: var(--accent-teal); }
+  .step-card:nth-child(3) { animation-delay: 0.15s; --card-color: var(--accent-green); }
+  .step-card:nth-child(4) { animation-delay: 0.20s; --card-color: var(--accent-orange); }
+  .step-card:nth-child(5) { animation-delay: 0.25s; --card-color: var(--accent-purple); }
+  .step-card:nth-child(6) { animation-delay: 0.30s; --card-color: var(--accent-red); }
+
+  .step-number-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding-top: 2px;
+  }
+
+  .step-num {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: var(--card-color);
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  .step-icon {
+    font-size: 22px;
+    line-height: 1;
+    opacity: 0.7;
+  }
+
+  .step-body {}
+
+  .step-phase {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--card-color);
+    margin-bottom: 4px;
+  }
+
+  .step-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .step-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    font-weight: 300;
+    margin-bottom: 14px;
+  }
+
+  .step-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tag {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 100px;
+    background: rgba(0,0,0,0.04);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+  }
+
+  .tag.highlight {
+    background: rgba(var(--card-rgb), 0.08);
+    color: var(--card-color);
+    border-color: rgba(var(--card-rgb), 0.15);
+  }
+
+  /* For colored tags — inline style approach */
+  .tag-colored {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 100px;
+    border: 1px solid;
+  }
+
+  /* Sub-items */
+  .sub-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .sub-item {
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+  }
+
+  .sub-item-icon { font-size: 16px; margin-bottom: 4px; }
+  .sub-item-title { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+  .sub-item-desc { font-size: 11px; color: var(--text-secondary); line-height: 1.5; }
+
+  /* Divider arrow */
+  .arrow-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 8px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .arrow-row svg {
+    opacity: 0.3;
+  }
+
+  /* Footer note */
+  .footer-note {
+    margin-top: 40px;
+    background: linear-gradient(135deg, rgba(0,113,227,0.06), rgba(48,176,199,0.06));
+    border: 1px solid rgba(0,113,227,0.12);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 16px;
+    align-items: center;
+    animation: fadeUp 0.5s 0.4s ease both;
+  }
+
+  .footer-note-icon {
+    font-size: 32px;
+  }
+
+  .footer-note-text h3 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .footer-note-text p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px) {
+    .step-card {
+      grid-template-columns: 56px 1fr;
+      gap: 14px;
+      padding: 20px 18px 20px 16px;
+    }
+    .steps::before { left: 38px; }
+    .sub-items { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="header-label">零基础上手指南</div>
+    <h1>从零搭建你的第一个 AI 智能体</h1>
+    <p>不需要写代码，6 步走完从概念到运行的全过程</p>
+  </div>
+
+  <div class="steps">
+
+    <!-- Step 1 -->
+    <div class="step-card">
+      <div class="step-number-block">
+        <div class="step-num">1</div>
+        <div class="step-icon">🧠</div>
+      </div>
+      <div class="step-body">
+        <div class="step-phase">理解基础</div>
+        <div class="step-title">搞清楚「AI 智能体」是什么</div>
+        <div class="step-desc">
+          智能体（Agent）= 能自主<strong>感知环境 → 做出决策 → 执行动作</strong>的 AI 系统。<br>
+          它和普通聊天机器人的区别：它不只是"回答"，而是会主动"去做事"。
+        </div>
+        <div class="sub-items">
+          <div class="sub-item">
+            <div class="sub-item-icon">💬</div>
+            <div class="sub-item-title">大语言模型 (LLM)</div>
+            <div class="sub-item-desc">智能体的"大脑"，负责理解和推理</div>
+          </div>
+          <div class="sub-item">
+            <div class="sub-item-icon">🔧</div>
+            <div class="sub-item-title">工具调用 (Tools)</div>
+            <div class="sub-item-desc">搜索、写文件、发邮件……智能体的"手"</div>
+          </div>
+          <div class="sub-item">
+            <div class="sub-item-icon">📋</div>
+            <div class="sub-item-title">记忆 (Memory)</div>
+            <div class="sub-item-desc">短期上下文 + 长期知识库</div>
+          </div>
+          <div class="sub-item">
+            <div class="sub-item-icon">🎯</div>
+            <div class="sub-item-title">目标 (Goal)</div>
+            <div class="sub-item-desc">你给它的任务和约束条件</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-card">
+      <div class="step-number-block">
+        <div class="step-num">2</div>
+        <div class="step-icon">🎯</div>
+      </div>
+      <div class="step-body">
+        <div class="step-phase">需求定义</div>
+        <div class="step-title">想清楚你的智能体要解决什么问题</div>
+        <div class="step-desc">
+          在动手之前，先用一句话描述它的职责：<br>
+          <strong>「帮我 ____，当 ____ 发生时，自动 ____」</strong><br>
+          越具体越好。避免一上来就做"万能助手"。
+        </div>
+        <div class="step-tags">
+          <span class="tag">📨 自动回复邮件</span>
+          <span class="tag">📊 每日数据报告</span>
+          <span class="tag">🔍 竞品监控</span>
+          <span class="tag">📱 社媒内容生成</span>
+          <span class="tag">🛒 客服问答</span>
+          <span class="tag">📁 文件整理归类</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step-card">
+      <div class="step-number-block">
+        <div class="step-num">3</div>
+        <div class="step-icon">🛠️</div>
+      </div>
+      <div class="step-body">
+        <div class="step-phase">选择工具</div>
+        <div class="step-title">选一个适合零基础的搭建平台</div>
+        <div class="step-desc">
+          不需要写代码的入门方案，优先选可视化流程工具。
+        </div>
+        <div class="sub-items">
+          <div class="sub-item">
+            <div class="sub-item-icon">🟠</div>
+            <div class="sub-item-title">n8n</div>
+            <div class="sub-item-desc">可视化流程 + 自托管，灵活性最高</div>
+          </div>
+          <div class="sub-item">
+            <div class="sub-item-icon">⚡</div>
+            <div class="sub-item-title">Dify</div>
+            <div class="sub-item-desc">专为 AI 应用设计，内置 Agent 模式</div>
+          </div>
+          <div class="sub-item">
+            <div class="sub-item-icon">🔵</div>
+            <div class="sub-item-title">Coze / 扣子</div>
+            <div class="sub-item-desc">国内可用，适合快速上手和部署</div>
+          </div>
+          <div class="sub-item">
+            <div class="sub-item-icon">⚙️</div>
+            <div class="sub-item-title">Make / Zapier</div>
+            <div class="sub-item-desc">自动化工作流，集成 AI 节点</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step-card">
+      <div class="step-number-block">
+        <div class="step-num">4</div>
+        <div class="step-icon">✍️</div>
+      </div>
+      <div class="step-body">
+        <div class="step-phase">提示词工程</div>
+        <div class="step-title">写好系统提示词（System Prompt）</div>
+        <div class="step-desc">
+          这是决定智能体「人格」和「行为边界」的核心配置。<br>
+          告诉它：<strong>你是谁 → 你的目标 → 你能做什么 → 你不能做什么 → 输出格式</strong>。
+        </div>
+        <div class="sub-items">
+          <div class="sub-item">
+            <div class="sub-item-icon">👤</div>
+            <div class="sub-item-title">角色定义</div>
+            <div class="sub-item-desc">「你是一位专业的XX助手」</div>
+          </div>
+          <div class="sub-item">
+            <div class="sub-item-icon">📐</div>
+            <div class="sub-item-title">行为规则</div>
+            <div class="sub-item-desc">什么情况下调用什么工具</div>
+          </div>
+          <div class="sub-item">
+            <div class="sub-item-icon">📤</div>
+            <div class="sub-item-title">输出格式</div>
+            <div class="sub-item-desc">JSON / Markdown / 固定模板</div>
+          </div>
+          <div class="sub-item">
+            <div class="sub-item-icon">🚫</div>
+            <div class="sub-item-title">边界约束</div>
+            <div class="sub-item-desc">哪些事情不处理、如何兜底</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="step-card">
+      <div class="step-number-block">
+        <div class="step-num">5</div>
+        <div class="step-icon">🔗</div>
+      </div>
+      <div class="step-body">
+        <div class="step-phase">连接 & 测试</div>
+        <div class="step-title">接入真实数据和工具，反复测试</div>
+        <div class="step-desc">
+          把智能体和你实际使用的系统连通，然后用真实场景测试它的表现。
+          出错是正常的——调整提示词、限制工具权限、增加兜底逻辑。
+        </div>
+        <div class="sub-items">
+          <div class="sub-item">
+            <div class="sub-item-icon">📡</div>
+            <div class="sub-item-title">数据源接入</div>
+            <div class="sub-item-desc">数据库、API、文档、网页</div>
+          </div>
+          <div class="sub-item">
+            <div class="sub-item-icon">🔌</div>
+            <div class="sub-item-title">工具集成</div>
+            <div class="sub-item-desc">邮件、日历、Slack、CRM</div>
+          </div>
+          <div class="sub-item">
+            <div class="sub-item-icon">🧪</div>
+            <div class="sub-item-title">边界测试</div>
+            <div class="sub-item-desc">故意输入奇怪问题看它怎么处理</div>
+          </div>
+          <div class="sub-item">
+            <div class="sub-item-icon">🔄</div>
+            <div class="sub-item-title">迭代优化</div>
+            <div class="sub-item-desc">每次跑完复盘，小步快跑</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 6 -->
+    <div class="step-card">
+      <div class="step-number-block">
+        <div class="step-num">6</div>
+        <div class="step-icon">🚀</div>
+      </div>
+      <div class="step-body">
+        <div class="step-phase">部署 & 迭代</div>
+        <div class="step-title">上线运行，持续观察和优化</div>
+        <div class="step-desc">
+          部署不是终点，而是真正学习的开始。在真实使用中收集反馈，
+          监控异常行为，逐步扩展能力范围。一个好的智能体是"养"出来的。
+        </div>
+        <div class="step-tags">
+          <span class="tag">📊 监控日志</span>
+          <span class="tag">⚠️ 异常告警</span>
+          <span class="tag">📈 效果追踪</span>
+          <span class="tag">🔒 权限管理</span>
+          <span class="tag">💾 版本控制</span>
+          <span class="tag">🔁 持续迭代</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer-note">
+    <div class="footer-note-icon">💡</div>
+    <div class="footer-note-text">
+      <h3>新手最常见的坑：一开始想得太复杂</h3>
+      <p>第一个智能体只需要做好一件事。从最小可用版本出发，验证它真的有用，再慢慢叠加能力。复杂性是积累出来的，不是设计出来的。</p>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
