@@ -1783,7 +1783,10 @@
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('tab-' + name).classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const header = document.querySelector('.site-header');
+    const priceStrip = document.querySelector('.price-strip');
+    const contentTop = priceStrip.offsetTop + priceStrip.offsetHeight;
+    window.scrollTo({ top: contentTop - header.offsetHeight, behavior: 'smooth' });
   }
 
   // Package tab switching
@@ -1804,7 +1807,10 @@
 
   // Scroll to booking
   function scrollToBooking() {
-    document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
+    const booking = document.getElementById('booking');
+    const header = document.querySelector('.site-header');
+    const top = booking.getBoundingClientRect().top + window.scrollY - header.offsetHeight;
+    window.scrollTo({ top, behavior: 'smooth' });
   }
 
   // Scroll animations
