@@ -1,0 +1,1829 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>璞玉养生医美 · 全方位身心焕新</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --cream: #FAF6EF;
+    --ivory: #F5EFE4;
+    --gold: #C4975A;
+    --gold-light: #E5C99A;
+    --gold-pale: #F5E9D5;
+    --forest: #2A3828;
+    --sage: #5C7A5A;
+    --sage-light: #8FAE8C;
+    --blush: #E8D0C0;
+    --blush-deep: #C9937A;
+    --stone: #8A7E72;
+    --charcoal: #2C2520;
+    --white: #FEFCFA;
+    --border: rgba(196, 151, 90, 0.2);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--charcoal);
+    font-family: 'Noto Sans SC', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    max-width: 480px;
+    margin: 0 auto;
+    box-shadow: 0 0 40px rgba(0,0,0,0.12);
+    position: relative;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(250, 246, 239, 0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px 0;
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .logo {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--forest);
+    letter-spacing: 2px;
+  }
+
+  .logo span {
+    color: var(--gold);
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .btn-book-header {
+    background: var(--forest);
+    color: var(--gold-light);
+    border: none;
+    padding: 7px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-weight: 400;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .btn-book-header:hover { background: var(--sage); }
+
+  .tab-nav {
+    display: flex;
+    gap: 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .tab-btn {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 10px 0;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--stone);
+    cursor: pointer;
+    position: relative;
+    letter-spacing: 1px;
+    transition: color 0.3s;
+  }
+
+  .tab-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: var(--gold);
+    transition: width 0.3s;
+  }
+
+  .tab-btn.active {
+    color: var(--forest);
+    font-weight: 500;
+  }
+  .tab-btn.active::after { width: 60%; }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    height: 400px;
+    overflow: hidden;
+    background: var(--forest);
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 30% 40%, rgba(92, 122, 90, 0.5) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 80% 70%, rgba(196, 151, 90, 0.3) 0%, transparent 50%),
+      radial-gradient(ellipse 100% 100% at 50% 50%, #2A3828 30%, #1A2518 100%);
+  }
+
+  .hero-pattern {
+    position: absolute;
+    inset: 0;
+    opacity: 0.06;
+    background-image:
+      repeating-linear-gradient(45deg, var(--gold) 0px, var(--gold) 1px, transparent 1px, transparent 40px),
+      repeating-linear-gradient(-45deg, var(--gold) 0px, var(--gold) 1px, transparent 1px, transparent 40px);
+  }
+
+  .hero-deco-circle {
+    position: absolute;
+    border: 1px solid rgba(196, 151, 90, 0.3);
+    border-radius: 50%;
+    animation: pulse-ring 4s ease-in-out infinite;
+  }
+
+  .hero-deco-circle:nth-child(1) { width: 200px; height: 200px; right: -40px; top: -40px; animation-delay: 0s; }
+  .hero-deco-circle:nth-child(2) { width: 300px; height: 300px; right: -90px; top: -90px; animation-delay: 0.8s; }
+  .hero-deco-circle:nth-child(3) { width: 140px; height: 140px; left: -30px; bottom: 30px; animation-delay: 1.5s; }
+
+  @keyframes pulse-ring {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.05); }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 50px 28px 30px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(196, 151, 90, 0.15);
+    border: 1px solid rgba(196, 151, 90, 0.4);
+    color: var(--gold-light);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+    width: fit-content;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-tag::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+  }
+
+  .hero-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.3;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+    animation: fadeUp 0.8s 0.15s ease both;
+  }
+
+  .hero-title em {
+    color: var(--gold-light);
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 38px;
+    font-weight: 300;
+  }
+
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-style: italic;
+    color: rgba(229, 201, 154, 0.7);
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 24px;
+    animation: fadeUp 0.8s 0.45s ease both;
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--gold-light);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 1px;
+    margin-top: 3px;
+  }
+
+  .stat-divider {
+    width: 1px;
+    background: rgba(196,151,90,0.3);
+    align-self: stretch;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── PRICE STRIP ── */
+  .price-strip {
+    background: var(--forest);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .price-left {}
+
+  .price-from {
+    font-size: 10px;
+    color: rgba(229,201,154,0.6);
+    letter-spacing: 1px;
+  }
+
+  .price-main {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-top: 2px;
+  }
+
+  .price-current {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--gold-light);
+  }
+
+  .price-original {
+    font-size: 14px;
+    color: rgba(255,255,255,0.3);
+    text-decoration: line-through;
+  }
+
+  .price-badge {
+    background: var(--blush-deep);
+    color: white;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  .btn-book-main {
+    background: linear-gradient(135deg, var(--gold) 0%, var(--blush-deep) 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(196,151,90,0.4);
+    white-space: nowrap;
+  }
+
+  .btn-book-main:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(196,151,90,0.5);
+  }
+
+  /* ── SECTION COMMON ── */
+  .section {
+    padding: 36px 20px;
+    border-bottom: 1px solid var(--border);
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .section.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--gold), transparent);
+  }
+
+  .section-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--forest);
+    letter-spacing: 3px;
+    white-space: nowrap;
+  }
+
+  .section-en {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    font-style: italic;
+    color: var(--stone);
+    letter-spacing: 2px;
+    text-align: center;
+    margin-top: -16px;
+    margin-bottom: 20px;
+  }
+
+  /* ── HIGHLIGHTS ── */
+  .highlights-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .highlight-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 16px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .highlight-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+
+  .highlight-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(to right, var(--gold), var(--sage-light));
+  }
+
+  .highlight-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .highlight-name {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--forest);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .highlight-desc {
+    font-size: 11px;
+    color: var(--stone);
+    line-height: 1.6;
+  }
+
+  /* ── PACKAGES ── */
+  .package-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+
+  .pkg-tab {
+    background: var(--ivory);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 7px 16px;
+    font-size: 12px;
+    font-family: 'Noto Sans SC', sans-serif;
+    color: var(--stone);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.3s;
+    flex-shrink: 0;
+  }
+
+  .pkg-tab.active {
+    background: var(--forest);
+    color: var(--gold-light);
+    border-color: var(--forest);
+  }
+
+  .package-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .pkg-card {
+    background: var(--white);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  .pkg-card:hover {
+    box-shadow: 0 8px 28px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+  }
+
+  .pkg-card.featured {
+    border-color: var(--gold);
+    box-shadow: 0 4px 20px rgba(196, 151, 90, 0.2);
+  }
+
+  .pkg-card-header {
+    padding: 16px 18px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    background: var(--ivory);
+  }
+
+  .pkg-card.featured .pkg-card-header {
+    background: linear-gradient(135deg, var(--forest) 0%, #3A5038 100%);
+  }
+
+  .pkg-name {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--forest);
+    letter-spacing: 1px;
+  }
+
+  .pkg-card.featured .pkg-name { color: var(--gold-light); }
+
+  .pkg-subtitle {
+    font-size: 11px;
+    color: var(--stone);
+    margin-top: 2px;
+    letter-spacing: 1px;
+  }
+
+  .pkg-card.featured .pkg-subtitle { color: rgba(229,201,154,0.6); }
+
+  .pkg-price-block {
+    text-align: right;
+  }
+
+  .pkg-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .pkg-card.featured .pkg-price { color: var(--gold-light); }
+
+  .pkg-price-orig {
+    font-size: 11px;
+    color: var(--stone);
+    text-decoration: line-through;
+  }
+
+  .pkg-card.featured .pkg-price-orig { color: rgba(229,201,154,0.5); }
+
+  .pkg-badge {
+    background: var(--blush-deep);
+    color: white;
+    font-size: 9px;
+    padding: 2px 7px;
+    border-radius: 10px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    margin-top: 4px;
+    display: inline-block;
+  }
+
+  .pkg-card-body {
+    padding: 14px 18px;
+  }
+
+  .pkg-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .pkg-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--charcoal);
+  }
+
+  .pkg-item::before {
+    content: '';
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--sage-light);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath d='M2 5l2 2 4-4' stroke='white' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 10px;
+  }
+
+  .pkg-footer {
+    padding: 12px 18px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .pkg-duration {
+    font-size: 11px;
+    color: var(--stone);
+    letter-spacing: 1px;
+  }
+
+  .btn-pkg {
+    background: var(--forest);
+    color: var(--gold-light);
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-family: 'Noto Sans SC', sans-serif;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .pkg-card.featured .btn-pkg {
+    background: var(--gold);
+    color: white;
+  }
+
+  .btn-pkg:hover { opacity: 0.85; }
+
+  /* ── SERVICES DETAIL ── */
+  .service-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .service-item {
+    display: flex;
+    gap: 16px;
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(196,151,90,0.1);
+    align-items: flex-start;
+  }
+
+  .service-item:last-child { border-bottom: none; }
+
+  .service-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 300;
+    color: var(--gold-pale);
+    line-height: 1;
+    min-width: 36px;
+    text-align: right;
+  }
+
+  .service-content {}
+
+  .service-name {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--forest);
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .service-tag {
+    background: var(--gold-pale);
+    color: var(--gold);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
+  .service-desc {
+    font-size: 13px;
+    color: var(--stone);
+    line-height: 1.8;
+  }
+
+  /* ── TEAM ── */
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .team-card {
+    background: var(--white);
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    transition: transform 0.3s;
+  }
+
+  .team-card:hover { transform: translateY(-4px); }
+
+  .team-avatar {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .team-card:nth-child(1) .team-avatar { background: linear-gradient(135deg, #d4e8d4 0%, #a8c8a8 100%); }
+  .team-card:nth-child(2) .team-avatar { background: linear-gradient(135deg, #e8d4c8 0%, #c8a898 100%); }
+  .team-card:nth-child(3) .team-avatar { background: linear-gradient(135deg, #d4d8e8 0%, #a8aec8 100%); }
+  .team-card:nth-child(4) .team-avatar { background: linear-gradient(135deg, #e8e4d4 0%, #c8c4a8 100%); }
+
+  .team-info { padding: 12px; }
+
+  .team-name {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--forest);
+    margin-bottom: 3px;
+  }
+
+  .team-title {
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+  }
+
+  .team-exp {
+    font-size: 11px;
+    color: var(--stone);
+    line-height: 1.6;
+  }
+
+  /* ── TIMELINE (Schedule) ── */
+  .timeline {
+    position: relative;
+    padding-left: 24px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--gold), var(--sage-light), transparent);
+  }
+
+  .tl-item {
+    position: relative;
+    padding: 0 0 20px 20px;
+  }
+
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: 5px;
+    width: 8px;
+    height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    border: 2px solid var(--cream);
+  }
+
+  .tl-time {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    color: var(--gold);
+    letter-spacing: 1px;
+    margin-bottom: 3px;
+  }
+
+  .tl-content {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--forest);
+    margin-bottom: 3px;
+  }
+
+  .tl-desc {
+    font-size: 12px;
+    color: var(--stone);
+    line-height: 1.6;
+  }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .testi-card {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 18px;
+    border: 1px solid var(--border);
+    position: relative;
+  }
+
+  .testi-card::before {
+    content: '"';
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 64px;
+    color: var(--gold-pale);
+    position: absolute;
+    top: 8px;
+    left: 14px;
+    line-height: 1;
+    font-weight: 300;
+  }
+
+  .testi-text {
+    font-size: 13px;
+    color: var(--charcoal);
+    line-height: 1.9;
+    padding-top: 18px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .testi-footer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  .testi-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--sage-light), var(--gold-pale));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .testi-name {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--forest);
+  }
+
+  .testi-meta {
+    font-size: 11px;
+    color: var(--stone);
+  }
+
+  .stars {
+    margin-left: auto;
+    color: var(--gold);
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+
+  /* ── FAQ ── */
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .faq-item {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .faq-q {
+    padding: 15px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-weight: 400;
+    color: var(--forest);
+    letter-spacing: 0.5px;
+    transition: background 0.2s;
+  }
+
+  .faq-q:hover { background: var(--ivory); }
+
+  .faq-arrow {
+    color: var(--gold);
+    font-size: 18px;
+    transition: transform 0.3s;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .faq-item.open .faq-arrow { transform: rotate(90deg); }
+
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s;
+    font-size: 13px;
+    color: var(--stone);
+    line-height: 1.8;
+    padding: 0 18px;
+  }
+
+  .faq-item.open .faq-a {
+    max-height: 200px;
+    padding: 0 18px 16px;
+  }
+
+  /* ── NOTICE ── */
+  .notice-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .notice-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 12px 14px;
+    background: var(--white);
+    border-radius: 10px;
+    border-left: 3px solid var(--sage-light);
+  }
+
+  .notice-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .notice-text {
+    font-size: 13px;
+    color: var(--charcoal);
+    line-height: 1.7;
+  }
+
+  .notice-text strong {
+    color: var(--forest);
+    font-weight: 500;
+  }
+
+  /* ── CTA FOOTER ── */
+  .cta-footer {
+    background: var(--forest);
+    padding: 36px 20px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-footer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 100%, rgba(196,151,90,0.2) 0%, transparent 70%);
+  }
+
+  .cta-footer-content { position: relative; }
+
+  .cta-ornament {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    font-style: italic;
+    color: rgba(229,201,154,0.5);
+    letter-spacing: 4px;
+    margin-bottom: 12px;
+  }
+
+  .cta-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+  }
+
+  .cta-subtitle {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 28px;
+    letter-spacing: 1px;
+  }
+
+  .cta-btns {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-cta-primary {
+    background: linear-gradient(135deg, var(--gold) 0%, #D4A870 100%);
+    color: white;
+    border: none;
+    padding: 14px 30px;
+    border-radius: 30px;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 20px rgba(196,151,90,0.4);
+  }
+
+  .btn-cta-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(196,151,90,0.5);
+  }
+
+  .btn-cta-secondary {
+    background: transparent;
+    color: var(--gold-light);
+    border: 1px solid rgba(196,151,90,0.4);
+    padding: 14px 30px;
+    border-radius: 30px;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .btn-cta-secondary:hover {
+    background: rgba(196,151,90,0.1);
+    border-color: var(--gold);
+  }
+
+  .cta-contact {
+    margin-top: 24px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 1px;
+  }
+
+  .cta-contact span {
+    color: rgba(229,201,154,0.6);
+  }
+
+  /* Tab content visibility */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Floating back-to-top */
+  .back-top {
+    position: fixed;
+    bottom: 24px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    background: var(--forest);
+    color: var(--gold-light);
+    border: none;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+    z-index: 50;
+    transform: translateY(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .back-top.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Image placeholder for service visual */
+  .service-visual {
+    width: 100%;
+    height: 160px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .visual-1 {
+    background: linear-gradient(135deg, #3A5038 0%, #5C7A5A 50%, #2A3828 100%);
+  }
+
+  .visual-2 {
+    background: linear-gradient(135deg, #6B4C3B 0%, #C9937A 50%, #4A2C1A 100%);
+  }
+
+  .visual-deco {
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 40%),
+      radial-gradient(circle at 80% 20%, rgba(255,255,255,0.05) 0%, transparent 30%);
+  }
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-top">
+    <div class="logo">璞玉<span>Wellness</span></div>
+    <button class="btn-book-header" onclick="scrollToBooking()">立即预约</button>
+  </div>
+  <nav class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('detail', this)">详情</button>
+    <button class="tab-btn" onclick="switchTab('services', this)">项目</button>
+    <button class="tab-btn" onclick="switchTab('team', this)">专家</button>
+    <button class="tab-btn" onclick="switchTab('reviews', this)">评价</button>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-pattern"></div>
+  <div class="hero-deco-circle"></div>
+  <div class="hero-deco-circle"></div>
+  <div class="hero-deco-circle"></div>
+  <div class="hero-content">
+    <div class="hero-tag">精选推荐 · 当季热门</div>
+    <h1 class="hero-title">全方位<em>身心焕新</em><br>养生医美体验</h1>
+    <p class="hero-subtitle">Rejuvenate your body, restore your essence</p>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">3200+</div>
+        <div class="stat-label">服务客户</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num">98%</div>
+        <div class="stat-label">满意度</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num">12年</div>
+        <div class="stat-label">专业经验</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICE STRIP -->
+<div class="price-strip">
+  <div class="price-left">
+    <div class="price-from">套餐起价</div>
+    <div class="price-main">
+      <span class="price-current">$299</span>
+      <span class="price-original">$599</span>
+      <span class="price-badge">-50%</span>
+    </div>
+  </div>
+  <button class="btn-book-main" onclick="scrollToBooking()">预约体验 →</button>
+</div>
+
+<!-- TAB: DETAIL -->
+<div id="tab-detail" class="tab-content active">
+
+  <!-- HIGHLIGHTS -->
+  <section class="section" data-animate>
+    <div class="section-header">
+      <div class="section-line"></div>
+      <h2 class="section-title">核心优势</h2>
+      <div class="section-line" style="background: linear-gradient(to left, var(--gold), transparent)"></div>
+    </div>
+    <p class="section-en">Why Choose Us</p>
+    <div class="highlights-grid">
+      <div class="highlight-card">
+        <span class="highlight-icon">🌿</span>
+        <div class="highlight-name">中西融合</div>
+        <div class="highlight-desc">传统中医智慧结合现代医美科技，标本兼治</div>
+      </div>
+      <div class="highlight-card">
+        <span class="highlight-icon">🔬</span>
+        <div class="highlight-name">医疗级设备</div>
+        <div class="highlight-desc">进口顶级仪器，安全有效，效果经科学验证</div>
+      </div>
+      <div class="highlight-card">
+        <span class="highlight-icon">👩‍⚕️</span>
+        <div class="highlight-name">持牌医师主理</div>
+        <div class="highlight-desc">所有项目由注册医疗专业人员亲自操作</div>
+      </div>
+      <div class="highlight-card">
+        <span class="highlight-icon">✨</span>
+        <div class="highlight-name">定制化方案</div>
+        <div class="highlight-desc">专属健康评估，一人一方，精准调养</div>
+      </div>
+      <div class="highlight-card">
+        <span class="highlight-icon">🛡️</span>
+        <div class="highlight-name">全程安心</div>
+        <div class="highlight-desc">疗前评估 · 疗中监护 · 疗后跟踪三重保障</div>
+      </div>
+      <div class="highlight-card">
+        <span class="highlight-icon">🏡</span>
+        <div class="highlight-name">私密尊享</div>
+        <div class="highlight-desc">独立疗程空间，全程私密，无打扰体验</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PACKAGES -->
+  <section class="section" data-animate>
+    <div class="section-header">
+      <div class="section-line"></div>
+      <h2 class="section-title">套餐选择</h2>
+      <div class="section-line" style="background: linear-gradient(to left, var(--gold), transparent)"></div>
+    </div>
+    <p class="section-en">Treatment Packages</p>
+
+    <div class="package-tabs">
+      <button class="pkg-tab active" onclick="switchPkgTab('facial', this)">肌肤焕新</button>
+      <button class="pkg-tab" onclick="switchPkgTab('body', this)">身体调养</button>
+      <button class="pkg-tab" onclick="switchPkgTab('anti', this)">抗衰焕活</button>
+    </div>
+
+    <div id="pkg-facial" class="package-cards">
+      <div class="pkg-card">
+        <div class="pkg-card-header">
+          <div>
+            <div class="pkg-name">皙颜基础体验</div>
+            <div class="pkg-subtitle">First Time · 初次体验</div>
+          </div>
+          <div class="pkg-price-block">
+            <div class="pkg-price">$299</div>
+            <div class="pkg-price-orig">原价 $599</div>
+          </div>
+        </div>
+        <div class="pkg-card-body">
+          <div class="pkg-items">
+            <div class="pkg-item">深层洁肤 + 肌底导入</div>
+            <div class="pkg-item">水光补水保湿疗程</div>
+            <div class="pkg-item">肩颈经络舒缓（30min）</div>
+            <div class="pkg-item">个人健康档案建立</div>
+          </div>
+        </div>
+        <div class="pkg-footer">
+          <span class="pkg-duration">⏱ 约 90 分钟</span>
+          <button class="btn-pkg" onclick="scrollToBooking()">选择此套餐</button>
+        </div>
+      </div>
+
+      <div class="pkg-card featured">
+        <div class="pkg-card-header">
+          <div>
+            <div class="pkg-name">焕颜全面提升</div>
+            <div class="pkg-subtitle">Most Popular · 热销推荐</div>
+          </div>
+          <div class="pkg-price-block">
+            <div class="pkg-price">$699</div>
+            <div class="pkg-price-orig">原价 $1,399</div>
+            <div class="pkg-badge">★ 最受欢迎</div>
+          </div>
+        </div>
+        <div class="pkg-card-body">
+          <div class="pkg-items">
+            <div class="pkg-item">专业肌肤检测分析</div>
+            <div class="pkg-item">射频提升 + 光子嫩肤</div>
+            <div class="pkg-item">玻尿酸深层补水注射</div>
+            <div class="pkg-item">中医经络面部按摩（45min）</div>
+            <div class="pkg-item">定制营养补剂方案</div>
+            <div class="pkg-item">疗后追踪（1次复诊）</div>
+          </div>
+        </div>
+        <div class="pkg-footer">
+          <span class="pkg-duration" style="color: rgba(229,201,154,0.6)">⏱ 约 150 分钟</span>
+          <button class="btn-pkg" onclick="scrollToBooking()">选择此套餐</button>
+        </div>
+      </div>
+
+      <div class="pkg-card">
+        <div class="pkg-card-header">
+          <div>
+            <div class="pkg-name">尊享VIP全项</div>
+            <div class="pkg-subtitle">Premium · 至尊体验</div>
+          </div>
+          <div class="pkg-price-block">
+            <div class="pkg-price">$1,299</div>
+            <div class="pkg-price-orig">原价 $2,800</div>
+          </div>
+        </div>
+        <div class="pkg-card-body">
+          <div class="pkg-items">
+            <div class="pkg-item">全套肌肤深度修复</div>
+            <div class="pkg-item">热玛吉 / Thermage紧致提升</div>
+            <div class="pkg-item">全身淋巴排毒疗程（60min）</div>
+            <div class="pkg-item">中医体质调理 + 针灸</div>
+            <div class="pkg-item">IV营养滴注（定制配方）</div>
+            <div class="pkg-item">专属营养师膳食指导</div>
+            <div class="pkg-item">3次疗后追踪复诊</div>
+          </div>
+        </div>
+        <div class="pkg-footer">
+          <span class="pkg-duration">⏱ 约 240 分钟</span>
+          <button class="btn-pkg" onclick="scrollToBooking()">选择此套餐</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="pkg-body" class="package-cards" style="display:none">
+      <div class="pkg-card">
+        <div class="pkg-card-header">
+          <div>
+            <div class="pkg-name">经络调养套餐</div>
+            <div class="pkg-subtitle">Meridian Balance</div>
+          </div>
+          <div class="pkg-price-block">
+            <div class="pkg-price">$359</div>
+            <div class="pkg-price-orig">原价 $720</div>
+          </div>
+        </div>
+        <div class="pkg-card-body">
+          <div class="pkg-items">
+            <div class="pkg-item">中医体质辨析评估</div>
+            <div class="pkg-item">全背经络推拿（60min）</div>
+            <div class="pkg-item">拔罐 / 刮痧（按需）</div>
+            <div class="pkg-item">艾灸温经散寒疗程</div>
+          </div>
+        </div>
+        <div class="pkg-footer">
+          <span class="pkg-duration">⏱ 约 120 分钟</span>
+          <button class="btn-pkg" onclick="scrollToBooking()">选择此套餐</button>
+        </div>
+      </div>
+
+      <div class="pkg-card featured">
+        <div class="pkg-card-header">
+          <div>
+            <div class="pkg-name">塑形纤体疗程</div>
+            <div class="pkg-subtitle">Body Sculpting · 热卖</div>
+          </div>
+          <div class="pkg-price-block">
+            <div class="pkg-price">$799</div>
+            <div class="pkg-price-orig">原价 $1,600</div>
+            <div class="pkg-badge">★ 限时特惠</div>
+          </div>
+        </div>
+        <div class="pkg-card-body">
+          <div class="pkg-items">
+            <div class="pkg-item">体脂率 & 体成分专业检测</div>
+            <div class="pkg-item">射频溶脂塑形（腹/腿/臂）</div>
+            <div class="pkg-item">淋巴引流全身排毒</div>
+            <div class="pkg-item">冷热交替紧致疗程</div>
+            <div class="pkg-item">定制运动营养方案</div>
+          </div>
+        </div>
+        <div class="pkg-footer">
+          <span class="pkg-duration" style="color: rgba(229,201,154,0.6)">⏱ 约 180 分钟</span>
+          <button class="btn-pkg" onclick="scrollToBooking()">选择此套餐</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="pkg-anti" class="package-cards" style="display:none">
+      <div class="pkg-card featured">
+        <div class="pkg-card-header">
+          <div>
+            <div class="pkg-name">逆龄抗衰精华</div>
+            <div class="pkg-subtitle">Anti-Aging Essentials</div>
+          </div>
+          <div class="pkg-price-block">
+            <div class="pkg-price">$899</div>
+            <div class="pkg-price-orig">原价 $1,800</div>
+            <div class="pkg-badge">★ 明星项目</div>
+          </div>
+        </div>
+        <div class="pkg-card-body">
+          <div class="pkg-items">
+            <div class="pkg-item">超声刀深层提拉紧致</div>
+            <div class="pkg-item">PRP自体血清焕肤</div>
+            <div class="pkg-item">抗氧化 IV 营养滴注</div>
+            <div class="pkg-item">胶原蛋白再生疗程</div>
+            <div class="pkg-item">中医滋补气血调养</div>
+          </div>
+        </div>
+        <div class="pkg-footer">
+          <span class="pkg-duration" style="color: rgba(229,201,154,0.6)">⏱ 约 200 分钟</span>
+          <button class="btn-pkg" onclick="scrollToBooking()">选择此套餐</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMELINE/FLOW -->
+  <section class="section" data-animate>
+    <div class="section-header">
+      <div class="section-line"></div>
+      <h2 class="section-title">疗程流程</h2>
+      <div class="section-line" style="background: linear-gradient(to left, var(--gold), transparent)"></div>
+    </div>
+    <p class="section-en">Your Journey</p>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-time">Step 01</div>
+        <div class="tl-content">专属健康评估</div>
+        <div class="tl-desc">到达后由资深顾问进行体质检测，填写健康问卷，了解您的身体状况与诉求</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-time">Step 02</div>
+        <div class="tl-content">医师会诊制定方案</div>
+        <div class="tl-desc">执照医师亲自审阅评估报告，为您量身定制个人化疗程方案</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-time">Step 03</div>
+        <div class="tl-content">专业疗程体验</div>
+        <div class="tl-desc">在独立私密的空间中，由专业治疗师全程陪同，完成疗程项目</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-time">Step 04</div>
+        <div class="tl-content">疗后护理指导</div>
+        <div class="tl-desc">提供详细的居家护理建议及饮食调养方案，巩固疗程成效</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-time">Step 05</div>
+        <div class="tl-content">追踪复诊回访</div>
+        <div class="tl-desc">疗程结束后7天内专人回访，持续关注您的恢复状况</div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- end tab-detail -->
+
+<!-- TAB: SERVICES -->
+<div id="tab-services" class="tab-content">
+  <section class="section visible" style="padding-top:28px">
+    <div class="service-visual visual-1">
+      <div class="visual-deco"></div>
+      Natural Healing · 自然疗愈
+    </div>
+    <div class="section-header">
+      <div class="section-line"></div>
+      <h2 class="section-title">养生项目</h2>
+      <div class="section-line" style="background: linear-gradient(to left, var(--gold), transparent)"></div>
+    </div>
+    <p class="section-en">Traditional Wellness</p>
+    <div class="service-list">
+      <div class="service-item">
+        <div class="service-num">01</div>
+        <div class="service-content">
+          <div class="service-name">中医经络调理 <span class="service-tag">招牌</span></div>
+          <div class="service-desc">依据中医十二经络理论，结合推拿、针灸、艾灸三位一体，疏通气血，调节脏腑功能。适合亚健康、失眠、慢性疲劳人群。</div>
+        </div>
+      </div>
+      <div class="service-item">
+        <div class="service-num">02</div>
+        <div class="service-content">
+          <div class="service-name">排毒淋巴引流</div>
+          <div class="service-desc">专业手法刺激淋巴系统，促进代谢废物排出，改善浮肿，增强免疫力，恢复身体自然平衡。</div>
+        </div>
+      </div>
+      <div class="service-item">
+        <div class="service-num">03</div>
+        <div class="service-content">
+          <div class="service-name">热石脊椎温养</div>
+          <div class="service-desc">采用火山玄武岩热石，沿脊柱及穴位施以温热力量，缓解肌肉紧张、改善脊椎亚健康。</div>
+        </div>
+      </div>
+      <div class="service-item">
+        <div class="service-num">04</div>
+        <div class="service-content">
+          <div class="service-name">IV营养滴注 <span class="service-tag">医疗级</span></div>
+          <div class="service-desc">由注册医师监督，直接将高浓度维生素C、谷胱甘肽、B族维生素等输注血液，快速补充，高效吸收。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section visible" style="padding-top:0">
+    <div class="service-visual visual-2">
+      <div class="visual-deco"></div>
+      Advanced Aesthetics · 精准医美
+    </div>
+    <div class="section-header">
+      <div class="section-line"></div>
+      <h2 class="section-title">医美项目</h2>
+      <div class="section-line" style="background: linear-gradient(to left, var(--gold), transparent)"></div>
+    </div>
+    <p class="section-en">Medical Aesthetics</p>
+    <div class="service-list">
+      <div class="service-item">
+        <div class="service-num">05</div>
+        <div class="service-content">
+          <div class="service-name">超声刀 HIFU 提拉 <span class="service-tag">热门</span></div>
+          <div class="service-desc">高强度聚焦超声，作用于SMAS筋膜层，无创紧致提升面部轮廓，可见即时提升效果，持续12-18个月。</div>
+        </div>
+      </div>
+      <div class="service-item">
+        <div class="service-num">06</div>
+        <div class="service-content">
+          <div class="service-name">PRP自体血清焕肤</div>
+          <div class="service-desc">抽取自身血液提取富血小板血浆，注射回皮肤，激活自体修复机制，自然再生，无排异风险。</div>
+        </div>
+      </div>
+      <div class="service-item">
+        <div class="service-num">07</div>
+        <div class="service-content">
+          <div class="service-name">皮秒激光净肤</div>
+          <div class="service-desc">皮秒级脉冲精准击碎黑色素，淡化色斑、提亮肤色，修复毛孔粗大，恢复婴儿般透亮肌肤。</div>
+        </div>
+      </div>
+      <div class="service-item">
+        <div class="service-num">08</div>
+        <div class="service-content">
+          <div class="service-name">热玛吉 Thermage <span class="service-tag">抗衰</span></div>
+          <div class="service-desc">单极射频深达皮下6mm，一次治疗同时紧致提升、改善皱纹、轮廓重塑，效果可持续2年以上。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- TAB: TEAM -->
+<div id="tab-team" class="tab-content">
+  <section class="section visible" style="padding-top:28px">
+    <div class="section-header">
+      <div class="section-line"></div>
+      <h2 class="section-title">专家团队</h2>
+      <div class="section-line" style="background: linear-gradient(to left, var(--gold), transparent)"></div>
+    </div>
+    <p class="section-en">Our Specialists</p>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">👩‍⚕️</div>
+        <div class="team-info">
+          <div class="team-name">林美华 医师</div>
+          <div class="team-title">医学总监</div>
+          <div class="team-exp">毕业于多伦多大学医学院，执业皮肤科医师，专研医美抗衰15年</div>
+        </div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">🧑‍⚕️</div>
+        <div class="team-info">
+          <div class="team-name">陈志远 中医师</div>
+          <div class="team-title">中医养生主任</div>
+          <div class="team-exp">注册中医师，北京中医药大学硕士，20年中医临床经验</div>
+        </div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">👩</div>
+        <div class="team-info">
+          <div class="team-name">Sandra K.</div>
+          <div class="team-title">医美治疗师</div>
+          <div class="team-exp">持证注册护士，专业激光与超声刀操作认证，服务3000+客户</div>
+        </div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">🧑</div>
+        <div class="team-info">
+          <div class="team-name">王营养师</div>
+          <div class="team-title">功能营养师</div>
+          <div class="team-exp">注册营养师RD，功能医学认证，擅长抗炎饮食与肠道修复</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px">
+      <div class="section-header">
+        <div class="section-line"></div>
+        <h2 class="section-title">资质认证</h2>
+        <div class="section-line" style="background: linear-gradient(to left, var(--gold), transparent)"></div>
+      </div>
+      <div class="notice-list">
+        <div class="notice-item">
+          <span class="notice-icon">🏅</span>
+          <div class="notice-text"><strong>College of Physicians and Surgeons of Ontario (CPSO)</strong> 注册医疗机构</div>
+        </div>
+        <div class="notice-item">
+          <span class="notice-icon">🏅</span>
+          <div class="notice-text"><strong>College of Traditional Chinese Medicine Practitioners & Acupuncturists of Ontario (CTCMPAO)</strong> 注册中医诊所</div>
+        </div>
+        <div class="notice-item">
+          <span class="notice-icon">🏅</span>
+          <div class="notice-text">Health Canada 医疗器械合规使用认证</div>
+        </div>
+        <div class="notice-item">
+          <span class="notice-icon">🏅</span>
+          <div class="notice-text">ISO 9001 医疗服务质量管理体系认证</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- TAB: REVIEWS -->
+<div id="tab-reviews" class="tab-content">
+  <section class="section visible" style="padding-top:28px">
+    <div class="section-header">
+      <div class="section-line"></div>
+      <h2 class="section-title">客户评价</h2>
+      <div class="section-line" style="background: linear-gradient(to left, var(--gold), transparent)"></div>
+    </div>
+    <p class="section-en">Client Stories</p>
+
+    <div style="display:flex; gap:20px; justify-content:center; margin-bottom:24px; text-align:center">
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif; font-size:42px; color:var(--gold); line-height:1">4.9</div>
+        <div style="color:var(--gold); font-size:14px; letter-spacing:2px">★★★★★</div>
+        <div style="font-size:11px; color:var(--stone); margin-top:3px">Google 评分</div>
+      </div>
+      <div style="width:1px; background:var(--border)"></div>
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif; font-size:42px; color:var(--gold); line-height:1">4.8</div>
+        <div style="color:var(--gold); font-size:14px; letter-spacing:2px">★★★★★</div>
+        <div style="font-size:11px; color:var(--stone); margin-top:3px">Yelp 评分</div>
+      </div>
+      <div style="width:1px; background:var(--border)"></div>
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif; font-size:42px; color:var(--gold); line-height:1">360+</div>
+        <div style="font-size:11px; color:var(--stone); margin-top:10px">真实评价数</div>
+      </div>
+    </div>
+
+    <div class="testimonials">
+      <div class="testi-card">
+        <div class="testi-text">做完焕颜全面提升套餐后，朋友都说我气色变好了很多！射频疗程让下垂的轮廓线条明显提升，最喜欢的是疗后的中医按摩，真的很舒服，疲劳感全消了。会继续回来做。</div>
+        <div class="testi-footer">
+          <div class="testi-avatar">🌸</div>
+          <div>
+            <div class="testi-name">Vivian L.</div>
+            <div class="testi-meta">焕颜全面提升套餐 · 2026年4月</div>
+          </div>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-text">长期失眠加肩颈问题，来做了三次中医经络调理，每次结束都睡得特别好。陈中医非常专业，每次都会根据状态调整手法。真的感谢这里的团队。</div>
+        <div class="testi-footer">
+          <div class="testi-avatar">🍃</div>
+          <div>
+            <div class="testi-name">Kevin Zhang</div>
+            <div class="testi-meta">中医经络调理 · 2026年3月</div>
+          </div>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-text">超声刀效果超出预期！做完下巴线条明显了，法令纹也淡了很多。医师在操作前解释得很详细，全程都感觉很安心。环境也非常舒适私密，不会有在普通美容院的不安全感。</div>
+        <div class="testi-footer">
+          <div class="testi-avatar">✨</div>
+          <div>
+            <div class="testi-name">Michelle W.</div>
+            <div class="testi-meta">超声刀提升疗程 · 2026年2月</div>
+          </div>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- NOTICE SECTION (always visible at bottom) -->
+<section class="section" data-animate>
+  <div class="section-header">
+    <div class="section-line"></div>
+    <h2 class="section-title">预约须知</h2>
+    <div class="section-line" style="background: linear-gradient(to left, var(--gold), transparent)"></div>
+  </div>
+  <p class="section-en">Important Notes</p>
+  <div class="notice-list">
+    <div class="notice-item">
+      <span class="notice-icon">📋</span>
+      <div class="notice-text"><strong>首次预约</strong>需提前完成在线健康问卷，医师审核后确认可进行疗程</div>
+    </div>
+    <div class="notice-item">
+      <span class="notice-icon">⏰</span>
+      <div class="notice-text"><strong>请提前15分钟到达</strong>，以便完成疗前准备工作，迟到超过20分钟可能影响疗程时间</div>
+    </div>
+    <div class="notice-item">
+      <span class="notice-icon">❌</span>
+      <div class="notice-text"><strong>取消政策：</strong>需提前48小时告知，否则收取50%定金作违约金</div>
+    </div>
+    <div class="notice-item">
+      <span class="notice-icon">⚠️</span>
+      <div class="notice-text">孕期、哺乳期、近期做过手术者，以及特定皮肤疾病患者请提前告知，部分项目不适合</div>
+    </div>
+    <div class="notice-item">
+      <span class="notice-icon">🧴</span>
+      <div class="notice-text">医美项目当日<strong>请勿化妆</strong>，清洁状态来院，疗后72小时内避免剧烈运动及蒸桑拿</div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div style="margin-top:28px">
+    <div class="section-header">
+      <div class="section-line"></div>
+      <h2 class="section-title">常见问题</h2>
+      <div class="section-line" style="background: linear-gradient(to left, var(--gold), transparent)"></div>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>医美项目有没有恢复期（downtime）？</span>
+          <span class="faq-arrow">›</span>
+        </div>
+        <div class="faq-a">视项目而定。超声刀和热玛吉基本无恢复期，当天可正常社交。激光项目可能有3-7天轻微红斑/脱皮，医师会提前详细说明。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>套餐可以多人拆分使用吗？</span>
+          <span class="faq-arrow">›</span>
+        </div>
+        <div class="faq-a">套餐为个人专属，不可拆分转让。但可以购买礼品卡作为礼物赠送，接受者完成评估后按实际情况使用。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>保险可以报销吗？</span>
+          <span class="faq-arrow">›</span>
+        </div>
+        <div class="faq-a">针灸及部分中医项目在部分保险计划下可以报销。医美项目通常不在OHIP范围内，但可提供官方收据供私人保险申报。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>一般需要做几次才有效果？</span>
+          <span class="faq-arrow">›</span>
+        </div>
+        <div class="faq-a">单次即有明显体验，长期效果建议做3-6次疗程为一个疗程周期。医师会在初诊时根据个人情况给出建议。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FOOTER -->
+<section id="booking" class="cta-footer">
+  <div class="cta-footer-content">
+    <div class="cta-ornament">— 开始您的焕新之旅 —</div>
+    <h2 class="cta-title">立即预约疗程</h2>
+    <p class="cta-subtitle">首次体验优惠 · 名额有限</p>
+    <div class="cta-btns">
+      <button class="btn-cta-primary">📞 电话预约</button>
+      <button class="btn-cta-secondary">💬 在线咨询</button>
+    </div>
+    <div class="cta-contact">
+      营业时间：周一至周六 10:00 – 19:00<br>
+      <span>地址：Toronto, ON · 微信同号：PuyuWellness</span>
+    </div>
+  </div>
+</section>
+
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+  // Tab switching
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + name).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Package tab switching
+  function switchPkgTab(name, btn) {
+    document.querySelectorAll('.pkg-tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.package-cards').forEach(c => c.style.display = 'none');
+    btn.classList.add('active');
+    document.getElementById('pkg-' + name).style.display = 'flex';
+  }
+
+  // FAQ toggle
+  function toggleFaq(el) {
+    const item = el.closest('.faq-item');
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  }
+
+  // Scroll to booking
+  function scrollToBooking() {
+    document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // Scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
+
+  // Back to top button
+  const backTop = document.getElementById('backTop');
+  window.addEventListener('scroll', () => {
+    backTop.classList.toggle('show', window.scrollY > 400);
+  });
+</script>
+
+</body>
+</html>
